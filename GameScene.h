@@ -25,8 +25,8 @@ private:
 	private:
 		
 	public:
-		int score;
-		int nowscore;
+		int score;//ゲームを通じての持ち点：初期値２０
+		int nowscore;//そのラウンドで取得し点：初期値０；「勝負」するまで持ち点に加えられない
 		//役判定用
 		unsigned int yaku;
 		unsigned int num_kasu;

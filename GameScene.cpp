@@ -192,6 +192,9 @@ void GameScene::Draw() {
 		DrawBox(180, 400, 460, 460, BLACK, TRUE);
 		DrawExtendFormatStringToHandle(200, 420, 1.0, 1.0, WHITE, fonthandle, "‚Ç‚ê‚ðŽæ‚è‚Ü‚·‚©H");
 	}
+	if (keystate_2 == ON) {
+		int i = 0;
+	}
 }
 
 int GameScene::CardDataLoad() {
@@ -436,15 +439,15 @@ int GameScene::YakuHantei() {
 
 	if (kasu >= 10) {
 		nowscore += 1 + kasu - 10;
-		if (kasu > player[teban].num_kasu)yaku += 0x0001;
+		yaku += 0x0001;
 	}
 	if (tan >= 5) {
 		nowscore += 1 + tan - 5;
-		if (tan > player[teban].num_tan)yaku += 0x0002;
+		yaku += 0x0002;
 	}
 	if (tane >= 5) {
 		nowscore += 1 + tane - 5;
-		if (tane > player[teban].num_tane)yaku += 0x0004;
+		yaku += 0x0004;
 	}
 
 	if (hikari == 3 && !is43) {
@@ -482,6 +485,8 @@ int GameScene::YakuHantei() {
 	player[teban].num_kasu = kasu;
 	player[teban].num_tan = tan;
 	player[teban].num_tane = tane;
+
+	int i = 0;
 
 	if (nowscore > player[teban].nowscore) {
 		player[teban].nowscore = nowscore;
