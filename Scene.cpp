@@ -2,6 +2,7 @@
 #include"TitleScene.h"
 #include"FusumaScene.h"
 #include"GameScene.h"
+#include"VSCPGameScene.h"
 #include"ResultScene.h"
 
 //Ã“Iƒƒ“ƒo•Ï”‚ÌÀ‘ÌéŒ¾
@@ -47,6 +48,10 @@ void SceneManager::CreateScene(SceneID _sceneid, SceneLayer _layer, int _gamenum
 		else if (_layer == SceneLayer::UPPER)upperscene = new GameScene(gamenum, teban, score_player0, score_player1);
 		break;
 
+	case SceneID::VSCPGAME:
+		if (_layer == SceneLayer::DOWNER)downerscene = new VSCPGameScene(gamenum, teban, score_player0, score_player1);
+		else if (_layer == SceneLayer::UPPER)upperscene = new VSCPGameScene(gamenum, teban, score_player0, score_player1);
+		break;
 	case SceneID::RESULT:
 		if (_layer == SceneLayer::DOWNER)downerscene = new ResultScene(gamenum, teban, score_player0, score_player1);
 		else if (_layer == SceneLayer::UPPER)upperscene = new ResultScene(gamenum, teban, score_player0, score_player1);
