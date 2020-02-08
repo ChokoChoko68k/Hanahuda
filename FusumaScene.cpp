@@ -22,7 +22,7 @@ void FusumaScene::Update() {
 
 	if (count == 320) {
 		if (waitcount == 60) {
-			SceneManager::GetInstance()->CreateScene(GAME, DOWNER);
+			SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
 			isclosing = false;
 		}
 		waitcount++;
@@ -38,7 +38,7 @@ void FusumaScene::Update() {
 
 	//‚Ó‚·‚Ü‘S•”ŠJ‚¢‚½
 	if (!isclosing && count == 0) {
-		SceneManager::GetInstance()->DeleteScene(UPPER);
+		SceneManager::GetInstance()->DeleteScene(SceneLayer::UPPER);
 		return;
 	}
 }

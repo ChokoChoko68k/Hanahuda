@@ -8,11 +8,11 @@ DATEDATA date;//for DxLib::GetDateTime(DATEDATA*pointer)
 
 void DebugLight();
 
-int WINAPI WinMain(
-	HINSTANCE instancehandle,
-	HINSTANCE preinstancehandle, //16bit時代の産物;常にNULL
-	LPSTR commandline,//ダブルクリックで開いたファイルの名前など．しかし""が入ってしまうというばっきゃろー;Unicodeに対応してないためこれを使うのは非推奨らしい
-	int howtoshowwindow) {
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,//インスタンスハンドル
+	_In_opt_ HINSTANCE hPrevInstance,//HINSTANCE preinstancehandle, 16bit時代の産物;常にNULL
+	_In_ LPWSTR    lpCmdLine,//LPSTR commandline,//ダブルクリックで開いたファイルの名前など．しかし""が入ってしまうというばっきゃろー;Unicodeに対応してないためこれを使うのは非推奨らしい
+	_In_ int       nCmdShow)//int howtoshowwindow
+{
 
 	int graphmode = SetGraphMode(SCREEN_HEIGHT, SCREEN_WIDTH, 24);
 	SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
@@ -37,9 +37,9 @@ int WINAPI WinMain(
 
 	SceneManager::CreateInstance();
 
-	SceneManager::GetInstance()->CreateScene(TITLE, DOWNER);
+	SceneManager::GetInstance()->CreateScene(SceneID::TITLE, SceneLayer::DOWNER);
 
-	while (true) {
+	while (ProcessMessage() == 0 && keystate_9 != 1) {
 
 		SetDrawScreen(DX_SCREEN_BACK);
 
@@ -57,10 +57,6 @@ int WINAPI WinMain(
 #endif
 
 		ScreenFlip();
-
-		//ENDPROCESS
-		if (ProcessMessage() != 0)break;
-		if (keystate_9 == ON)break;
 	}
 	DxLib_End();
 
@@ -69,8 +65,8 @@ int WINAPI WinMain(
 
 void DebugLight() {
 	clsDx();
-	printfDx("%ffps\nJoypad数=%d\nmousex=%d\nmousey=%d\nclick_left=%d\n"
-		, GetFps(), GetJoypadNum(), mousex, mousey, click_left);
+	printfDx("%ffps\nJoypad数=%d\nmousex=%d\nmousey=%d\nclick_left=%d\nkeystate_1=%dn"
+		, GetFps(), GetJoypadNum(), mousex, mousey, click_left,keystate_1);
 }
 
 /*
