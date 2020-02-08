@@ -1,10 +1,9 @@
 #include"utility.h"
 #include"GameScene.h"
-#include"Choko.h"
 
 //そもそも各札に、一月の四枚は0から3,二月の四枚は4から7,.....十二月の四枚は44から47と、0から47のインデックスが割り振ってある
 
-GameScene::GameScene(int _gamenum, int _teban, int _score_player0, int _score_player1) {
+void GameScene::Init(int _gamenum, int _teban, int _score_player0, int _score_player1) {
 
 	CardDataLoad();
 
@@ -37,6 +36,7 @@ GameScene::GameScene(int _gamenum, int _teban, int _score_player0, int _score_pl
 		else card[i].graph = LoadGraph("graphic/ura.png");
 
 	}
+	graph_ura = LoadGraph("graphic/ura.png");
 
 	gamenum = _gamenum + 1;
 	teban = _teban;
@@ -55,9 +55,6 @@ GameScene::GameScene(int _gamenum, int _teban, int _score_player0, int _score_pl
 	Deal();
 	isdrawing = false;
 	cellkind = Cellkind::NONE;
-}
-
-GameScene::~GameScene() {
 }
 
 void GameScene::Update() {
@@ -109,7 +106,7 @@ void GameScene::Update() {
 			itr_temp2 += fieldplace_choosed;
 			field.erase(itr_temp2);
 
-			DeckToField();
+			DeckDraw();
 
 			if (YakuHantei() != 0) {
 				cellkind = Cellkind::KOIKOI;
@@ -131,7 +128,7 @@ void GameScene::Update() {
 
 		if (Trash(holdplace_selected) != 0)return;//エラーが出たり複数選択になったらもう１ループする
 
-		DeckToField();
+		DeckDraw();
 
 		if (YakuHantei() != 0) {
 			cellkind = Cellkind::KOIKOI;
@@ -394,7 +391,7 @@ int GameScene::Choose() {
 }
 
 //山札から引いて場札と照らしあわせる処理全般
-void GameScene::DeckToField() {
+void GameScene::DeckDraw() {
 	for (unsigned int i = 0; i < field.size(); i++) {
 		if (card[deck.at(0)].month == card[field[i]].month) {//月一致
 			//deck to player

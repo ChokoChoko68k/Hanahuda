@@ -5,12 +5,13 @@
 */
 #pragma once
 #include"Scene.h"
+#include"Choko.h"
 #include<vector>
 
 typedef unsigned char byte;
 
 class GameScene : public Scene {
-private:
+protected:
 
 	enum class Cellkind { NONE, KOIKOI, MULTICHOICE };
 
@@ -68,6 +69,8 @@ private:
 	Card card[48];
 	Player player[2];
 
+	Button button[2];
+
 	std::vector<byte> deck;//山札
 	std::vector<byte> field;//場札
 
@@ -78,26 +81,31 @@ private:
 	byte teban;//手番は誰か
 
 	int graph_back;
+	int graph_ura;
 
 	int holdplace_selected;//byteにしたいが-1を入れるのでint;符号なしに-1して255出すエラーやりました
 
 	std::vector<byte> samemonthcard;//その札がfieldで何番目なのかが入る。出札と同じ月の札が場に複数あった場合に使う
 
-	int CardDataLoad();
-	void Shuffle();
-	bool IsDealOK();//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセットする
-	void Deal();//配る
-	int Select();//手札から場に出す札を選択
-	int Trash(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
-	int Choose();//場に同じ月のものが複数あった場合の、場札選択
-	void DeckToField();
-	int YakuHantei();
+	virtual void Init(int _gamenum, int _teban, int _score_player0, int _score_player1);
+	virtual int CardDataLoad();
+	virtual void Shuffle();
+	virtual bool IsDealOK();//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセットする
+	virtual void Deal();//配る
+	virtual int Select();//手札から場に出す札を選択
+	virtual int Trash(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
+	virtual int Choose();//場に同じ月のものが複数あった場合の、場札選択
+	virtual void DeckDraw();
+	virtual int YakuHantei();
 public:
-	GameScene(int _gamenum, int _teban, int _score_player0, int _score_player1);
-	~GameScene();
+	GameScene() {};//なぜかデフォコンが無いとで継承先でエラーが出る
+	GameScene(int _gamenum, int _teban, int _score_player0, int _score_player1) {
+		Init(_gamenum, _teban, _score_player0, _score_player1);
+	};
+	virtual ~GameScene() {};
 
-	void Update();
-	void Draw();
+	virtual void Update();
+	virtual void Draw();
 
 };
 

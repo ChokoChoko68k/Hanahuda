@@ -1,6 +1,6 @@
 #pragma once
 
-enum class SceneID { TITLE, FUSUMA, GAME, RESULT };
+enum class SceneID { TITLE, FUSUMA, GAME,VSCPGAME, RESULT };
 
 enum class SceneLayer { DOWNER, UPPER };
 
@@ -40,6 +40,7 @@ private:
 		teban = 0;
 		score_player0 = 20;
 		score_player1 = 20;
+		isvscp = false;
 	};
 	static SceneManager* pointer_instance;
 
@@ -48,6 +49,7 @@ private:
 	int teban;
 	int score_player0;
 	int score_player1;
+	//int nextsceneid;
 
 public:
 	static void CreateInstance() {//特定のオブジェクトを基準とする相対的な参照・・・じゃなくなる
@@ -80,6 +82,8 @@ public:
 	void CreateScene(SceneID _sceneid, SceneLayer _layer, int _gamenum = 0, int _teban = 0 , int _score_player0 = 20, int _score_player1 = 20);
 
 	void DeleteScene(SceneLayer _layer);
+
+	bool isvscp;//リザルト画面から帰ってきたあとGameSceneを作るのかVSCPGameSceneを作るのか保存しておくため
 };
 
 

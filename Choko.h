@@ -37,15 +37,40 @@ inline double SignRand(double argument){
 	return ((argument * 2 * GetRand(10000) / 10000.0) - argument);
 }
 
-inline double MultipleItself(double it){
-	return it*it;
-}
-inline float MultipleItself(float it){
-	return it*it;
-}
+class Button
+{
+public:
+	Button() {};
+	Button(int arg_x, int arg_y, int arg_width, int arg_height, int arg_graph) {
+		x = arg_x;
+		y = arg_y;
+		width = arg_width;
+		height = arg_height;
+		graph = arg_graph;
+	};
+	virtual ~Button() {};
 
-/*#ifdef _DEBUG
-#pragma comment(lib,"Choko_d.lib")
-#else
-#pragma comment(lib,"Choko_r.lib")
-#endif*/
+	void GraphLoad(const char* imagefilename) {
+		graph = LoadGraph(imagefilename);
+	}
+
+	bool IsPressed() {
+		if (click_left == 1) {
+			if (mousex >= x && mousex < x + width) {
+				if (mousey >= y && mousey < y + height) {
+					return true;
+				}
+			}
+		}
+		else return false;
+	}
+
+	int Draw() { return DrawGraph(x, y, graph, TRUE); }
+	int Draw(int arg_x, int arg_y) { return DrawGraph(arg_x, arg_y, graph, TRUE); }
+private:
+	int x{0};
+	int y{0};
+	int width{0};
+	int height{0};
+	int graph{0};
+};
