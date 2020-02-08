@@ -1,3 +1,8 @@
+/*
+ゲームシーン
+カードの実体は、プレイヤーや山札や場札と別に作っておく
+カードの受け渡しは、実体そのものではなく0~47のインデックスの数字を各vectorにpush_back&eraseしていく
+*/
 #pragma once
 #include"Scene.h"
 #include<vector>
@@ -6,7 +11,8 @@ typedef unsigned char byte;
 
 class GameScene : public Scene {
 private:
-	enum CELLKIND { NONE, KOIKOI, CHOICE };
+
+	enum class Cellkind { NONE, KOIKOI, MULTICHOICE };
 
 	const byte xblank = 20;
 	const byte xspace = 10;
@@ -15,12 +21,14 @@ private:
 	const byte cardwidth = 42;
 	const byte cardheight = 63;
 
+	//札クラス
 	struct Card {
 		byte month;
 		byte kind;
 		int graph;
 	};
 
+	//プレイヤークラス
 	class Player {
 	private:
 		
@@ -59,35 +67,29 @@ private:
 
 	Card card[48];
 	Player player[2];
-	//山札のインデックス
-	std::vector<byte> deck;
-	//場札のインデックス
-	std::vector<byte> field;
+
+	std::vector<byte> deck;//山札
+	std::vector<byte> field;//場札
 
 	bool isdrawing;
-	CELLKIND cellkind;
-	byte gamenum;
-	byte teban;
+
+	Cellkind cellkind;
+	byte gamenum;//何回戦目か
+	byte teban;//手番は誰か
 
 	int graph_back;
 
-	int index_selected;
+	int index_selected;//byteにしたいが-1を入れるのでint;符号なしに-1して255出すエラーやりました
 
-	//出札と同じ月の札が場に複数あった場合に使う
-	std::vector<byte> samemonthcard;
+	std::vector<byte> samemonthcard;//出札と同じ月の札が場に複数あった場合に使う
 
 	int CardDataLoad();
 	void Shuffle();
-	//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセット
-	bool IsDealOK();
-	//配る
-	void Deal();
-	//手札から場に出す札を選択
-	int Select();
-	//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
-	int Trash(int _cardindex);
-	//場に同じ月のものが複数あった場合の、場札選択
-	int Choose();
+	bool IsDealOK();//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセットする
+	void Deal();//配る
+	int Select();//手札から場に出す札を選択
+	int Trash(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
+	int Choose();//場に同じ月のものが複数あった場合の、場札選択
 	void DeckToField();
 	int YakuHantei();
 public:
