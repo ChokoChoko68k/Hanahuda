@@ -10,7 +10,7 @@ TitleScene::~TitleScene() {
 
 void TitleScene::Update() {
 	if (click_left == 1) {
-		SceneManager::GetInstance()->CreateScene(FUSUMA, UPPER);
+		SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
 		return;
 	}
 }

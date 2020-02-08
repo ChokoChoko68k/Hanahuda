@@ -54,71 +54,80 @@ GameScene::GameScene(int _gamenum, int _teban, int _score_player0, int _score_pl
 	}
 	Deal();
 	isdrawing = false;
-	cellkind = NONE;
+	cellkind = Cellkind::NONE;
 }
 
 GameScene::~GameScene() {
 }
 
 void GameScene::Update() {
+	//セル表示処理
+	//手札選択Select()
+	////捨て札と場札を合わせる処理Trash()
+	////山札から引いて場札を合わせる処理DecktoField()
+	//終了処理
 
-	//描画演出中
+	//描画演出中は更新しない
 	if (isdrawing)return;
 
-	//表示が出ている
-	if (cellkind != NONE) {
-		if (cellkind == KOIKOI) {
-			if (click_left == ON) {
-				//こいこい
-				if (mousex >= 0 && mousex < 320 && mousey >= 0 && mousey < 480) {
-					cellkind = NONE;
-					teban ^= 1;
-				}
-				//勝負
-				else if (mousex >= 320 && mousex < 640 && mousey >= 0 && mousey < 480) {
-					player[teban].score += player[teban].nowscore;
-					player[(teban + 1) % 2].score -= player[teban].nowscore;
-					SceneManager::GetInstance()->CreateScene(RESULT, UPPER, gamenum, teban, player[0].score, player[1].score);
-					return;
-				}
-			}
-		}
-		//手札から場に出したとき、月が一致するものが複数枚存在した場合
-		else if (cellkind == CHOICE) {
-
-			int num_choosed = Choose();
-
-			if (num_choosed != -1) {
-				//Trash関数からコピペ
-				//Get the card that player selected
-				player[teban].index_get.push_back(player[teban].index_hold[index_selected]);
-				std::vector<byte>::iterator itr_temp1 = player[teban].index_hold.begin();
-				itr_temp1 += index_selected;
-				player[teban].index_hold.erase(itr_temp1);
-
-				//deck to player
-				player[teban].index_get.push_back(field[num_choosed]);
-				std::vector<byte>::iterator itr_temp2 = field.begin();
-				itr_temp2 += num_choosed;
-				field.erase(itr_temp2);
-
-				DeckToField();
-
-				if (YakuHantei() != 0) {
-					cellkind = KOIKOI;
-					return;
-				}
-
+	//こいこいしますか？もしくはどの札を選択しますか？という表示が出ている
+	int num_choosed = -1;//switch~case文内だとLocal変数の初期化がされないのでここに；ONLY"case MULTICHOICE"
+	switch (cellkind)
+	{
+	case Cellkind::KOIKOI:
+		if (click_left == 1) {
+			//こいこい
+			if (mousex >= 0 && mousex < 320 && mousey >= 0 && mousey < 480) {
+				cellkind = Cellkind::NONE;
 				teban ^= 1;
-				cellkind = NONE;
+			}
+			//勝負
+			else if (mousex >= 320 && mousex < 640 && mousey >= 0 && mousey < 480) {
+				player[teban].score += player[teban].nowscore;
+				player[(teban + 1) % 2].score -= player[teban].nowscore;
+				SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
 				return;
 			}
 		}
-		return;//表示が出ている間は選択にいけない
+		return;//表示が出ている間は手札選択にいけない
+	case Cellkind::MULTICHOICE:
+		num_choosed = Choose();
+
+		if (num_choosed != -1) {
+			//TODO:どれを取りますか？と言われているにも関わらず月が合致しないものを選ぶとエラー
+
+			//Trash関数からコピペ
+			//Get the card that player selected
+			player[teban].index_get.push_back(player[teban].index_hold[num_choosed]);
+			std::vector<byte>::iterator itr_temp1 = player[teban].index_hold.begin();
+			itr_temp1 += num_choosed;
+			player[teban].index_hold.erase(itr_temp1);
+
+			//deck to player
+			player[teban].index_get.push_back(field[num_choosed]);
+			std::vector<byte>::iterator itr_temp2 = field.begin();
+			itr_temp2 += num_choosed;
+			field.erase(itr_temp2);
+
+			DeckToField();
+
+			if (YakuHantei() != 0) {
+				cellkind = Cellkind::KOIKOI;
+				return;
+			}
+
+			teban ^= 1;
+			cellkind = Cellkind::NONE;
+			return;//表示が出ている間は手札選択にいけない
+		}
+		break;
+	case Cellkind::NONE:
+	default:
+		break;
 	}
 
 	//手札選択
-	index_selected = Select();//normally returns -1, not 0//もともとint index_selected = Select(); で結果保存用の一時変数だったが、CHOICEで使うのでメンバ変数にした(危険)
+	index_selected = Select();//normally returns -1, not 0
 
 	if (index_selected != -1) {
 
@@ -127,7 +136,7 @@ void GameScene::Update() {
 		DeckToField();
 
 		if (YakuHantei() != 0) {
-			cellkind = KOIKOI;
+			cellkind = Cellkind::KOIKOI;
 			return;
 		}
 
@@ -136,7 +145,7 @@ void GameScene::Update() {
 
 	//役なしで終了
 	if ((player[0].index_hold).size() == 0 && (player[1].index_hold).size() == 0) {
-		SceneManager::GetInstance()->CreateScene(RESULT, UPPER, gamenum, teban, player[0].score, player[1].score);
+		SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
 		return;
 	}
 }
@@ -166,7 +175,7 @@ void GameScene::Draw() {
 		DrawGraph(640 - cardwidth - 30 - (i % 12) * 21, 320 + 70 * (i / 12), card[player[1].index_get[i]].graph, TRUE);
 	}
 
-	if (cellkind == KOIKOI) {
+	if (cellkind == Cellkind::KOIKOI) {
 		DrawBox(180, 50, 460, 460, BLACK, TRUE);
 		unsigned int yaku = player[teban].yaku;
 
@@ -188,11 +197,11 @@ void GameScene::Draw() {
 		DrawExtendFormatStringToHandle(200, 400, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
 		DrawExtendFormatStringToHandle(200, 430, 1.0, 1.0, WHITE, fonthandle, "はい　　　いいえ");
 	}
-	else if (cellkind == CHOICE) {
+	else if (cellkind == Cellkind::MULTICHOICE) {
 		DrawBox(180, 400, 460, 460, BLACK, TRUE);
 		DrawExtendFormatStringToHandle(200, 420, 1.0, 1.0, WHITE, fonthandle, "どれを取りますか？");
 	}
-	if (keystate_2 == ON) {
+	if (keystate_2 == 1) {
 		int i = 0;
 	}
 }
@@ -255,9 +264,10 @@ void GameScene::Shuffle() {
 	}
 }
 
+//配りかたが正当か；花札のルール上、場札に同じ月が3枚あるとゲームがうまく進まない。これを避けるための判定
 bool GameScene::IsDealOK() {
 	//fieldに渡す８枚のうち同じ月が3枚になっていたらリセット
-	byte month_exist[12] = {};//これで「初期化」になっているのだろうか
+	byte month_exist[12] = {};//これで「初期化」になっているのだろうか->なっとる
 
 	for (int i = 0; i < 8; i++) {
 		//fieldに入る各札のインデックスは既定(松のカス札を０として４７の桐に鳳凰まで割り振られている)ので、月を割り出せる
@@ -289,13 +299,12 @@ void GameScene::Deal() {
 }
 
 int GameScene::Select() {
-	if (click_left == ON) {
+	if (click_left == 1) {
 		if (teban == 0) {//player 0's turn
 			if (mousex < xblank + (cardwidth + xspace) * 2) {//if mousecursor is in player1 area
 				for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
 					if (mousex >= xblank + (cardwidth + xspace) * (i % 2) && mousex < xblank + (cardwidth + xspace) * (i % 2) + cardwidth) {
 						if (mousey >= yblank + (cardheight + yspace) * (i / 2) && mousey < yblank + (cardheight + yspace) * (i / 2) + cardheight) {
-							//return player[0].index_hold[i];
 							return i;
 						}
 					}
@@ -308,7 +317,6 @@ int GameScene::Select() {
 				for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {
 					if (mousex >= 500 + xblank + (cardwidth + xspace) * (i % 2) && mousex < 500 + xblank + (cardwidth + xspace) * (i % 2) + cardwidth) {
 						if (mousey >= yblank + (cardheight + yspace) * (i / 2) && mousey < yblank + (cardheight + yspace) * (i / 2) + cardheight) {
-							//return player[1].index_hold[i];
 							return i;
 						}
 					}
@@ -317,14 +325,16 @@ int GameScene::Select() {
 		}
 	}
 
-	return -1;
+	return -1;//still no card selected
 }
 
+//プレイヤーが選んだ札に対する処理全般
 int GameScene::Trash(int index) {
 
+	//samemonthcardには、その札がfieldで何番目なのかが入る
 	samemonthcard.clear();
 
-	//samemonthcardには、その札がfieldで何番目なのかが入る
+	//場札を走査して、月が一致する札が何枚あるか確認
 	for (unsigned int i = 0; i < field.size(); i++) {
 		if (card[player[teban].index_hold[index]].month == card[field[i]].month) {//月一致
 			samemonthcard.push_back(i);
@@ -333,7 +343,7 @@ int GameScene::Trash(int index) {
 	
 	if (samemonthcard.size() == 0) {
 		//deck to field
-		field.push_back(player[teban].index_hold[index]);
+		field.push_back(player[teban].index_hold[index]);//
 		std::vector<byte>::iterator itr_temp3 = player[teban].index_hold.begin();
 		itr_temp3 += index;
 		player[teban].index_hold.erase(itr_temp3);
@@ -356,18 +366,20 @@ int GameScene::Trash(int index) {
 		return 0;
 	}
 	else if (samemonthcard.size() > 1) {
-		cellkind = CHOICE;
+		cellkind = Cellkind::MULTICHOICE;
 		return -1;
 	}
 	return -2;//error
 }
 
+//場札に同じ月の札が複数あった場合に行う選択
 int GameScene::Choose() {
-	if (click_left == ON) {
+	if (click_left == 1) {
 		for (int i = 0; i < (signed int)samemonthcard.size(); i++) {
 			int num = samemonthcard[i];
+			//
 			if (mousex >= 160 + xblank + (cardwidth + 23) * (num % 4) && mousex < 160 + xblank + (cardwidth + 23) * (num % 4) + cardwidth) {
-				if (mousey >= 40 + yblank + (cardheight + 12) * (num / 4) && mousey < 40 + yblank + (cardheight + 12) * (num / 4) + cardheight) {						//return player[0].index_hold[i];
+				if (mousey >= 40 + yblank + (cardheight + 12) * (num / 4) && mousey < 40 + yblank + (cardheight + 12) * (num / 4) + cardheight) {
 					return num;
 				}
 			}
@@ -376,6 +388,7 @@ int GameScene::Choose() {
 	return -1;
 }
 
+//山札から引いて場札と照らしあわせる処理全般
 void GameScene::DeckToField() {
 	for (unsigned int i = 0; i < field.size(); i++) {
 		if (card[deck.at(0)].month == card[field[i]].month) {//月一致
