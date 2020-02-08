@@ -30,13 +30,13 @@ void ResultScene::Update() {
 	leftx_limit = count;
 	rightx_limit = 640 - count;
 
-	if (click_left == ON  && count == 320) {
+	if (click_left == 1  && count == 320) {
 		if (winner != -1) {
-			SceneManager::GetInstance()->CreateScene(TITLE, DOWNER);
+			SceneManager::GetInstance()->CreateScene(SceneID::TITLE, SceneLayer::DOWNER);
 			isclosing = false;
 		}
 		else {
-			SceneManager::GetInstance()->CreateScene(GAME, DOWNER, gamenum, teban, score_player0, score_player1);
+			SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER, gamenum, teban, score_player0, score_player1);
 			isclosing = false;
 		}
 	}
@@ -51,7 +51,7 @@ void ResultScene::Update() {
 
 	//‚Ó‚·‚Ü‘S•”ŠJ‚¢‚½
 	if (!isclosing && count == 0) {
-		SceneManager::GetInstance()->DeleteScene(UPPER);
+		SceneManager::GetInstance()->DeleteScene(SceneLayer::UPPER);
 		return;
 	}
 }

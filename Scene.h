@@ -1,9 +1,10 @@
 #pragma once
 
-enum SceneID { TITLE, FUSUMA, GAME, RESULT };
+enum class SceneID { TITLE, FUSUMA, GAME, RESULT };
 
-enum SceneLayer { DOWNER, UPPER };
+enum class SceneLayer { DOWNER, UPPER };
 
+//シーン
 class Scene {
 private:
 	//コピー禁止
