@@ -79,9 +79,9 @@ private:
 
 	int graph_back;
 
-	int index_selected;//byteにしたいが-1を入れるのでint;符号なしに-1して255出すエラーやりました
+	int holdplace_selected;//byteにしたいが-1を入れるのでint;符号なしに-1して255出すエラーやりました
 
-	std::vector<byte> samemonthcard;//出札と同じ月の札が場に複数あった場合に使う
+	std::vector<byte> samemonthcard;//その札がfieldで何番目なのかが入る。出札と同じ月の札が場に複数あった場合に使う
 
 	int CardDataLoad();
 	void Shuffle();
