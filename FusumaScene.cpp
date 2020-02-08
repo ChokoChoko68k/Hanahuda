@@ -22,7 +22,8 @@ void FusumaScene::Update() {
 
 	if (count == 320) {
 		if (waitcount == 60) {
-			SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
+			SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
+			SceneManager::GetInstance()->isvscp = true;
 			isclosing = false;
 		}
 		waitcount++;
@@ -47,7 +48,3 @@ void FusumaScene::Draw() {
 	DrawBox(0, 0, leftx_limit, SCREEN_HEIGHT, WHITE, TRUE);
 	DrawBox(640, 0, rightx_limit, SCREEN_HEIGHT, WHITE, TRUE);
 }
-
-/*
-gamenum‚àƒXƒRƒA‚à‚«‚¦‚¿‚á‚¤
-*/

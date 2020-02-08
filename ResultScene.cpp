@@ -5,7 +5,7 @@
 ResultScene::ResultScene(int _gamenum, int _teban, int _score_player0, int _score_player1) {
 	count = 0;
 	leftx_limit = 0;
-	rightx_limit = 640;
+	rightx_limit = SCREEN_WIDTH;
 
 	isclosing = true;
 
@@ -28,15 +28,17 @@ ResultScene::~ResultScene() {
 void ResultScene::Update() {
 
 	leftx_limit = count;
-	rightx_limit = 640 - count;
+	rightx_limit = SCREEN_WIDTH - count;
 
-	if (click_left == 1  && count == 320) {
+	if (click_left == 1  && count == SCREEN_WIDTH/2) {
 		if (winner != -1) {
 			SceneManager::GetInstance()->CreateScene(SceneID::TITLE, SceneLayer::DOWNER);
 			isclosing = false;
 		}
 		else {
-			SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER, gamenum, teban, score_player0, score_player1);
+			if(SceneManager::GetInstance()->isvscp)SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER, gamenum, teban, score_player0, score_player1);
+			else SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER, gamenum, teban, score_player0, score_player1);
+
 			isclosing = false;
 		}
 	}
