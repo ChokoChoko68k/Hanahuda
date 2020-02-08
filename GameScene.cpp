@@ -71,9 +71,11 @@ void GameScene::Update() {
 	if (isdrawing)return;
 
 	//こいこいしますか？もしくはどの札を選択しますか？という表示が出ている
-	int num_choosed = -1;//switch~case文内だとLocal変数の初期化がされないのでここに；ONLY"case MULTICHOICE"
+	int fieldplace_choosed = -1;//switch~case文内だとLocal変数の初期化がされないのでここに；ONLY"case MULTICHOICE"
 	switch (cellkind)
 	{
+	case Cellkind::NONE:
+		break;
 	case Cellkind::KOIKOI:
 		if (click_left == 1) {
 			//こいこい
@@ -91,22 +93,20 @@ void GameScene::Update() {
 		}
 		return;//表示が出ている間は手札選択にいけない
 	case Cellkind::MULTICHOICE:
-		num_choosed = Choose();
+		fieldplace_choosed = Choose();
 
-		if (num_choosed != -1) {
-			//TODO:どれを取りますか？と言われているにも関わらず月が合致しないものを選ぶとエラー
-
+		if (fieldplace_choosed != -1) {
 			//Trash関数からコピペ
 			//Get the card that player selected
-			player[teban].index_get.push_back(player[teban].index_hold[num_choosed]);
+			player[teban].index_get.push_back(player[teban].index_hold[holdplace_selected]);//本当はここにholdplace_selectedつまりプレイヤーが選んでおいたインデックスが入らなければならない。しかしこいこい判定直後１ループするせいでSelect()により-1が入る
 			std::vector<byte>::iterator itr_temp1 = player[teban].index_hold.begin();
-			itr_temp1 += num_choosed;
+			itr_temp1 += holdplace_selected;//
 			player[teban].index_hold.erase(itr_temp1);
 
 			//deck to player
-			player[teban].index_get.push_back(field[num_choosed]);
+			player[teban].index_get.push_back(field[fieldplace_choosed]);
 			std::vector<byte>::iterator itr_temp2 = field.begin();
-			itr_temp2 += num_choosed;
+			itr_temp2 += fieldplace_choosed;
 			field.erase(itr_temp2);
 
 			DeckToField();
@@ -118,20 +118,18 @@ void GameScene::Update() {
 
 			teban ^= 1;
 			cellkind = Cellkind::NONE;
-			return;//表示が出ている間は手札選択にいけない
 		}
-		break;
-	case Cellkind::NONE:
+		return;//表示が出ている間は手札選択にいけない
 	default:
 		break;
 	}
 
 	//手札選択
-	index_selected = Select();//normally returns -1, not 0
+	holdplace_selected = Select();//normally returns -1, not 0
 
-	if (index_selected != -1) {
+	if (holdplace_selected != -1) {
 
-		if (Trash(index_selected) != 0)return;
+		if (Trash(holdplace_selected) != 0)return;//エラーが出たり複数選択になったらもう１ループする
 
 		DeckToField();
 
@@ -151,7 +149,7 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
-
+	//Draw BackGroundImage
 	DrawGraph(0, 0, graph_back, TRUE);
 
 	for (unsigned int i = 0; i < (player[0].index_hold).size(); i++) {
@@ -166,22 +164,28 @@ void GameScene::Draw() {
 		DrawGraph(500 + xblank + (cardwidth + xspace) * (i % 2), yblank + (cardheight + yspace) * (i / 2), card[player[1].index_hold[i]].graph, TRUE);
 	}
 
-	//todo:種類別にソート;後回し
+	//Draw Every Player's gotten cards todo:月別にソート;後回し
 	for (unsigned int i = 0; i < (player[0].index_get).size(); i++) {
 		DrawGraph(30 + (i % 12) * 21, 320 + 70 * (i / 12), card[player[0].index_get[i]].graph, TRUE);//30は適当
 	}
-
 	for (unsigned int i = 0; i < (player[1].index_get).size(); i++) {
 		DrawGraph(640 - cardwidth - 30 - (i % 12) * 21, 320 + 70 * (i / 12), card[player[1].index_get[i]].graph, TRUE);
 	}
 
-	if (cellkind == Cellkind::KOIKOI) {
+	//Draw Cell
+	int nowyakunum = 0;//use only in KOIKOI
+	unsigned int yaku = player[teban].yaku;//use only in KOIKOI
+	switch (cellkind)
+	{
+	case GameScene::Cellkind::NONE:
+		break;
+	case GameScene::Cellkind::KOIKOI:
 		DrawBox(180, 50, 460, 460, BLACK, TRUE);
-		unsigned int yaku = player[teban].yaku;
+		yaku = player[teban].yaku;
 
 		DrawExtendFormatStringToHandle(100, 30, 1.0, 1.0, WHITE, fonthandle, "手番=%d  役=%d", teban, yaku);
 
-		int nowyakunum = 0;
+		nowyakunum = 0;
 		//&演算子は順位が==より低い。括弧を付ける。
 		if ((yaku & 0x0001) == 0x0001) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "カス　　%d文", 1 + player[teban].num_kasu - 10); nowyakunum++; }
 		if ((yaku & 0x0002) == 0x0002) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タン　　%d文", 1 + player[teban].num_tan - 5); nowyakunum++; }
@@ -196,13 +200,13 @@ void GameScene::Draw() {
 
 		DrawExtendFormatStringToHandle(200, 400, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
 		DrawExtendFormatStringToHandle(200, 430, 1.0, 1.0, WHITE, fonthandle, "はい　　　いいえ");
-	}
-	else if (cellkind == Cellkind::MULTICHOICE) {
+		break;
+	case GameScene::Cellkind::MULTICHOICE:
 		DrawBox(180, 400, 460, 460, BLACK, TRUE);
 		DrawExtendFormatStringToHandle(200, 420, 1.0, 1.0, WHITE, fonthandle, "どれを取りますか？");
-	}
-	if (keystate_2 == 1) {
-		int i = 0;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -298,6 +302,7 @@ void GameScene::Deal() {
 	}
 }
 
+//返り値は「そのカードの手札のなかで何番目に置いてあるか」。札のインデックスではない
 int GameScene::Select() {
 	if (click_left == 1) {
 		if (teban == 0) {//player 0's turn
@@ -512,9 +517,12 @@ int GameScene::YakuHantei() {
 /*タン５→タン６
 面倒だからnum_kasuに保存して役判定後の差分で調べた。雑。
 
-説明コメントを付ける
-・シーンをどう作るか、流れ
-・役判定の流れ、変数yaku
+同じブランチ内での更新をCommit
+これ更新させてくれ！ってのがPull Request
+いいだろう更新を受け入れるのがmerge
 
-カードをシーン外に静止させて
+
+fieldplace_choosed=samemonthcardには、その札がfieldで何番目なのかが入る
+holdplace_selectedは「そのカードの手札のなかで何番目に置いてあるか」
+どちらも札のインデックスではない。バグの温床だ
 */
