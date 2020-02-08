@@ -1,11 +1,6 @@
 #pragma once
 #include"DxLib.h"
 
-//original boolean type define
-typedef unsigned char Switch;
-const Switch OFF = 0;
-const Switch ON = 1;
-
 extern unsigned int keystate_left;
 extern unsigned int keystate_up;
 extern unsigned int keystate_right;
