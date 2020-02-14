@@ -26,6 +26,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="utility.h" />
+    <ClInclude Include="VSCPGameScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Choko.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="VSCPGameScene.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
