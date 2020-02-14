@@ -170,26 +170,37 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 	//Draw BackGroundImage
-	DrawGraph(0, 0, graph_back, TRUE);
+	DrawGraph(0, 0, graph_back, FALSE);
 
-	for (unsigned int i = 0; i < (player[0].index_hold).size(); i++) {
-		DrawGraph(xblank + (cardwidth + xspace) * (i % 2), yblank + (cardheight + yspace) * (i / 2), card[player[0].index_hold[i]].graph, TRUE);
+	//Draw Cards Player0 holds
+	for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
+		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 3, card[player[0].index_hold[i]].graph, FALSE);
 	}
 
-	for (unsigned int i = 0; i < field.size(); i++) {
-		DrawGraph(160 + xblank + (cardwidth + 23) * (i % 4), 40 + yblank + (cardheight + 12) * (i / 4), card[field[i]].graph, TRUE);
+	//Draw Field Cards
+	for (int i = 0; i < (signed int)field.size(); i++) {
+		if (i < 10) {
+			DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 1 * (cardwidth + xspace) + (i / 2) * (cardwidth + xspace), yblank + (1/*if 0, same y coordinate as player1's hand*/ + i % 2) * (cardheight + yspace), card[field[i]].graph, FALSE);
+		}
+		else if (i <= 10 && i < 12) {
+			DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 2 * (cardwidth + xspace) + (i / 2) * (cardwidth + xspace), yblank + (1 + i % 2) * (cardheight + yspace), card[field[i]].graph, FALSE);
+		}
+		else {
+			DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 1 * (cardwidth + xspace) + (i / 2) * (cardwidth + xspace), yblank + (1 + i % 2) * (cardheight + yspace), card[field[i]].graph, FALSE);
+		}
 	}
 
-	for (unsigned int i = 0; i < (player[1].index_hold).size(); i++) {
-		DrawGraph(500 + xblank + (cardwidth + xspace) * (i % 2), yblank + (cardheight + yspace) * (i / 2), card[player[1].index_hold[i]].graph, TRUE);
+	//Draw Cards Player1 holds
+	for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {//CPなので手札は見せない
+		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 0, graph_ura, FALSE);
 	}
 
-	//Draw Every Player's gotten cards todo:月別にソート;後回し
-	for (unsigned int i = 0; i < (player[0].index_get).size(); i++) {
-		DrawGraph(30 + (i % 12) * 21, 320 + 70 * (i / 12), card[player[0].index_get[i]].graph, TRUE);//30は適当
+	//Draw Every Player's gotten cards
+	for (int i = 0; i < (signed int)player[0].index_get.size(); i++) {
+		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ + (i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (2 + i / 8), card[player[0].index_get[i]].graph, FALSE);
 	}
-	for (unsigned int i = 0; i < (player[1].index_get).size(); i++) {
-		DrawGraph(640 - cardwidth - 30 - (i % 12) * 21, 320 + 70 * (i / 12), card[player[1].index_get[i]].graph, TRUE);
+	for (int i = 0; i < (signed int)player[1].index_get.size(); i++) {
+		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ + (i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (0 + i / 8), card[player[1].index_get[i]].graph, FALSE);
 	}
 
 	//Draw Cell
@@ -200,26 +211,27 @@ void GameScene::Draw() {
 	case GameScene::Cellkind::NONE:
 		break;
 	case GameScene::Cellkind::KOIKOI:
-		DrawBox(SCREEN_WIDTH/2-120, 50, SCREEN_WIDTH/2 + 120, SCREEN_HEIGHT-50, BLACK, TRUE);
+		DrawBox(40, yblank + (cardheight + yspace) * 1, 40 + 300, yblank + (cardheight + yspace) * 2 + cardheight, BLACK, TRUE);//x座標は画面中央を基準に真ん中揃え
 		yaku = player[teban].yaku;
 
-		DrawExtendFormatStringToHandle(100, 30, 1.0, 1.0, WHITE, fonthandle, "手番=%d  役=%d", teban, yaku);
+		//for debug
+		DrawExtendFormatStringToHandle(SCREEN_WIDTH / 2 - 120 + 45, 30, 1.0, 1.0, WHITE, fonthandle, "手番=%d  役=%d", teban, yaku);
 
-		nowyakunum = 0;
+		nowyakunum = 0;//現在できている役の数。描画の位置調整も兼ねる
 		//&演算子は順位が==より低い。括弧を付ける。
-		if ((yaku & 0x0001) == 0x0001) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "カス　　%d文", 1 + player[teban].num_kasu - 10); nowyakunum++; }
-		if ((yaku & 0x0002) == 0x0002) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タン　　%d文", 1 + player[teban].num_tan - 5); nowyakunum++; }
-		if ((yaku & 0x0004) == 0x0004) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タネ　　%d文", 1 + player[teban].num_tane - 5); nowyakunum++; }
-		if ((yaku & 0x0008) == 0x0008) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "三光　　%d文", 5); nowyakunum++; }
-		if ((yaku & 0x0010) == 0x0010) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "雨四光　　%d文", 8); nowyakunum++; }
-		if ((yaku & 0x0020) == 0x0020) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "四光　　%d文", 10); nowyakunum++; }
-		if ((yaku & 0x0040) == 0x0040) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "五光　　%d文", 15); nowyakunum++; }
-		if ((yaku & 0x0080) == 0x0080) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "赤タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
-		if ((yaku & 0x0100) == 0x0100) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "青タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
-		if ((yaku & 0x0200) == 0x0200) { DrawExtendFormatStringToHandle(200, 70 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "猪鹿蝶　　%d文", 5); nowyakunum++; }
+		if ((yaku & 0x0001) == 0x0001) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "カス　　%d文", 1 + player[teban].num_kasu - 10); nowyakunum++; }
+		if ((yaku & 0x0002) == 0x0002) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タン　　%d文", 1 + player[teban].num_tan - 5); nowyakunum++; }
+		if ((yaku & 0x0004) == 0x0004) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タネ　　%d文", 1 + player[teban].num_tane - 5); nowyakunum++; }
+		if ((yaku & 0x0008) == 0x0008) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "三光　　%d文", 5); nowyakunum++; }
+		if ((yaku & 0x0010) == 0x0010) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "雨四光　　%d文", 8); nowyakunum++; }
+		if ((yaku & 0x0020) == 0x0020) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "四光　　%d文", 10); nowyakunum++; }
+		if ((yaku & 0x0040) == 0x0040) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "五光　　%d文", 15); nowyakunum++; }
+		if ((yaku & 0x0080) == 0x0080) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "赤タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
+		if ((yaku & 0x0100) == 0x0100) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "青タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
+		if ((yaku & 0x0200) == 0x0200) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "猪鹿蝶　　%d文", 5); nowyakunum++; }
 
-		DrawExtendFormatStringToHandle(200, 400, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
-		DrawExtendFormatStringToHandle(200, 430, 1.0, 1.0, WHITE, fonthandle, "はい　　　いいえ");
+		DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
+		DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + 30, 1.0, 1.0, WHITE, fonthandle, "はい　　　いいえ");
 		break;
 	case GameScene::Cellkind::MULTICHOICE:
 		DrawBox(180, 400, 460, 460, BLACK, TRUE);
@@ -243,7 +255,7 @@ int GameScene::CardDataLoad() {
 		//一単位に分割
 		for (int i = 0; i<LIMIT_OF_DIGITS; i++) {
 			chardata[i] = FileRead_getc(fp);//FileRead系の関数は内部にポインタを持っていて、呼び出す度に見えないところでポインタがずれていく注意
-			if (chardata[i] == ';' || chardata[i] == '\n') {
+			if (chardata[i] == ',' || chardata[i] == '\n') {
 				chardata[i] = '\0';
 				break;
 			}
@@ -402,7 +414,6 @@ int GameScene::Choose() {
 	if (click_left == 1) {
 		for (int i = 0; i < (signed int)samemonthcard.size(); i++) {
 			int num = samemonthcard[i];
-			//
 			if (mousex >= 160 + xblank + (cardwidth + 23) * (num % 4) && mousex < 160 + xblank + (cardwidth + 23) * (num % 4) + cardwidth) {
 				if (mousey >= 40 + yblank + (cardheight + 12) * (num / 4) && mousey < 40 + yblank + (cardheight + 12) * (num / 4) + cardheight) {
 					return num;
