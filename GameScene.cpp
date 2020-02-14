@@ -7,35 +7,58 @@ void GameScene::Init(int _gamenum, int _teban, int _score_player0, int _score_pl
 
 	CardDataLoad();
 
-	graph_back = LoadGraph("graphic/a0007_001048_m.png");
+	graph_back = LoadGraph("graphic/BG.png");
 
 	//各札に0~47の番号を割り振ってあり、"「その番号」.png"の画像ファイルが存在することが前提。
-	for (int i = 0; i < 48; i++) {
-		//Finally all in one picture
-		/*if (card[i].kind == 0) card[i].graph = LoadGraph("graphic/28.png");
-		if (card[i].kind == 5) card[i].graph = LoadGraph("graphic/22.png");
-		if (card[i].kind == 10) card[i].graph = LoadGraph("graphic/30.png");
-		if (card[i].kind == 20) card[i].graph = LoadGraph("graphic/31.png");*/
-		if (i == 8)card[i].graph = LoadGraph("graphic/8.png");
-		else if(i==12)card[i].graph = LoadGraph("graphic/12.png");
-		else if (i == 13)card[i].graph = LoadGraph("graphic/13.png");
-		else if (i == 14)card[i].graph = LoadGraph("graphic/14.png");
-		else if (i == 15)card[i].graph = LoadGraph("graphic/15.png");
-		else if (i == 20)card[i].graph = LoadGraph("graphic/20.png");
-		else if (i == 21)card[i].graph = LoadGraph("graphic/21.png");
-		else if (i == 22)card[i].graph = LoadGraph("graphic/22.png");
-		else if (i == 23)card[i].graph = LoadGraph("graphic/23.png");
-		else if (i == 24)card[i].graph = LoadGraph("graphic/24.png");
-		else if (i == 25)card[i].graph = LoadGraph("graphic/25.png");
-		else if (i == 26)card[i].graph = LoadGraph("graphic/26.png");
-		else if (i == 27)card[i].graph = LoadGraph("graphic/27.png");
-		else if (i == 28)card[i].graph = LoadGraph("graphic/28.png");
-		else if (i == 29)card[i].graph = LoadGraph("graphic/29.png");
-		else if (i == 30)card[i].graph = LoadGraph("graphic/30.png");
-		else if (i == 31)card[i].graph = LoadGraph("graphic/31.png");
-		else card[i].graph = LoadGraph("graphic/ura.png");
+	card[0].graph = LoadGraph("graphic/0.png");
+	card[1].graph = LoadGraph("graphic/1.png");
+	card[2].graph = LoadGraph("graphic/2.png");
+	card[3].graph = LoadGraph("graphic/3.png");
+	card[4].graph = LoadGraph("graphic/4.png");
+	card[5].graph = LoadGraph("graphic/5.png");
+	card[6].graph = LoadGraph("graphic/6.png");
+	card[7].graph = LoadGraph("graphic/7.png");
+	card[8].graph = LoadGraph("graphic/8.png");
+	card[9].graph = LoadGraph("graphic/9.png");
+	card[10].graph = LoadGraph("graphic/10.png");
+	card[11].graph = LoadGraph("graphic/11.png");
+	card[12].graph = LoadGraph("graphic/12.png");
+	card[13].graph = LoadGraph("graphic/13.png");
+	card[14].graph = LoadGraph("graphic/14.png");
+	card[15].graph = LoadGraph("graphic/15.png");
+	card[16].graph = LoadGraph("graphic/16.png");
+	card[17].graph = LoadGraph("graphic/17.png");
+	card[18].graph = LoadGraph("graphic/18.png");
+	card[19].graph = LoadGraph("graphic/19.png");
+	card[20].graph = LoadGraph("graphic/20.png");
+	card[21].graph = LoadGraph("graphic/21.png");
+	card[22].graph = LoadGraph("graphic/22.png");
+	card[23].graph = LoadGraph("graphic/23.png");
+	card[24].graph = LoadGraph("graphic/24.png");
+	card[25].graph = LoadGraph("graphic/25.png");
+	card[26].graph = LoadGraph("graphic/26.png");
+	card[27].graph = LoadGraph("graphic/27.png");
+	card[28].graph = LoadGraph("graphic/28.png");
+	card[29].graph = LoadGraph("graphic/29.png");
+	card[30].graph = LoadGraph("graphic/30.png");
+	card[31].graph = LoadGraph("graphic/31.png");
+	card[32].graph = LoadGraph("graphic/32.png");
+	card[33].graph = LoadGraph("graphic/33.png");
+	card[34].graph = LoadGraph("graphic/34.png");
+	card[35].graph = LoadGraph("graphic/35.png");
+	card[36].graph = LoadGraph("graphic/36.png");
+	card[37].graph = LoadGraph("graphic/37.png");
+	card[38].graph = LoadGraph("graphic/38.png");
+	card[39].graph = LoadGraph("graphic/39.png");
+	card[40].graph = LoadGraph("graphic/40.png");
+	card[41].graph = LoadGraph("graphic/41.png");
+	card[42].graph = LoadGraph("graphic/42.png");
+	card[43].graph = LoadGraph("graphic/43.png");
+	card[44].graph = LoadGraph("graphic/44.png");
+	card[45].graph = LoadGraph("graphic/45.png");
+	card[46].graph = LoadGraph("graphic/46.png");
+	card[47].graph = LoadGraph("graphic/47.png");
 
-	}
 	graph_ura = LoadGraph("graphic/ura.png");
 
 	gamenum = _gamenum + 1;
@@ -177,7 +200,7 @@ void GameScene::Draw() {
 	case GameScene::Cellkind::NONE:
 		break;
 	case GameScene::Cellkind::KOIKOI:
-		DrawBox(180, 50, 460, 460, BLACK, TRUE);
+		DrawBox(SCREEN_WIDTH/2-120, 50, SCREEN_WIDTH/2 + 120, SCREEN_HEIGHT-50, BLACK, TRUE);
 		yaku = player[teban].yaku;
 
 		DrawExtendFormatStringToHandle(100, 30, 1.0, 1.0, WHITE, fonthandle, "手番=%d  役=%d", teban, yaku);
@@ -419,25 +442,32 @@ int GameScene::YakuHantei() {
 
 	int nowscore = 0;
 
-	unsigned int kasu = 0;
-	unsigned int tan = 0;
-	unsigned int tane = 0;
-	unsigned int hikari = 0;
+	int kasu = 0;
+	int tan = 0;
+	int tane = 0;
+	int hikari = 0;
 	
-	bool is43 = false;
+	bool is11 = false;//If No.11:"Sakura and Maku" exists
+	bool is31 = false;//If No.31:"Susuki and Tsuki" exists
+	bool is35 = false;//If No.35:"Kiku and Sake" exists
+	bool is43 = false;//If No.43:"Yanagi and OnnonoDouhuu" exists
 
-	unsigned int num_akatan = 0;
-	unsigned int num_aotan = 0;
-	unsigned int num_inosikachou = 0;
+	int num_akatan = 0;
+	int num_aotan = 0;
+	int num_inosikachou = 0;
 
-	for (unsigned int i = 0; i < player[teban].index_get.size(); i++) {
+	//scanning&count
+	for (int i = 0; i < player[teban].index_get.size(); i++) {
 		int index = player[teban].index_get[i];
 		if (card[index].kind == 0)kasu++;
 		else if (card[index].kind == 5)tan++;
 		else if (card[index].kind == 10)tane++;
 		else if (card[index].kind == 20)hikari++;
 
-		if (index == 43)is43 = true;//If No.43:"Yanagi and OnnonoDouhuu" exists
+		if (index == 11)is11 = true;
+		if (index == 31)is31 = true;
+		if (index == 35)is35 = true;
+		if (index == 43)is43 = true;
 
 		if (index == 2)num_akatan++;
 		if (index == 6)num_akatan++;
@@ -452,6 +482,7 @@ int GameScene::YakuHantei() {
 		if (index == 35)num_inosikachou++;
 	}
 
+	//decision
 	if (kasu >= 10) {
 		nowscore += 1 + kasu - 10;
 		yaku += 0x0001;
@@ -464,50 +495,61 @@ int GameScene::YakuHantei() {
 		nowscore += 1 + tane - 5;
 		yaku += 0x0004;
 	}
-
-	if (hikari == 3 && !is43) {
+	if (hikari == 3 && !is43) {//三光
 		nowscore += 5;
 		yaku += 0x0008;
 	}
 	else if (hikari == 4) {
 		if (is43) {
-			nowscore += 8;
+			nowscore += 8;//雨四光
 			yaku += 0x0010;
 		}
 		else {
-			nowscore += 10;
+			nowscore += 10;//四光
 			yaku += 0x0020;
 		}
 	}
 	else if (hikari == 5) {
-		nowscore += 15;
+		nowscore += 15;//五光
 		yaku += 0x0040;
 	}
 	
 	if (num_akatan == 3) {
-		nowscore += 5 + tan - 3;
+		nowscore += 5 + tan - 3;//赤短
 		yaku += 0x0080;
 	}
 	if (num_aotan == 3) {
-		nowscore += 5 + tan - 3;
+		nowscore += 5 + tan - 3;//青短
 		yaku += 0x0100;
 	}
 	if (num_inosikachou == 3) {
-		nowscore += 5;
+		nowscore += 5;//猪鹿蝶
 		yaku += 0x0200;
 	}
+	/*
+	if (is35) {
+		if(is11){
+			nowscore += 3;//花見酒
+			yaku += 0x0400;
+		}
+		if(is31){
+			nowscore += 3;//月見酒
+			yaku += 0x0800;
+		}
+	}
+	*/
 
 	player[teban].num_kasu = kasu;
 	player[teban].num_tan = tan;
 	player[teban].num_tane = tane;
 
-	int i = 0;
-
+	//new or renew yaku
 	if (nowscore > player[teban].nowscore) {
 		player[teban].nowscore = nowscore;
 		player[teban].yaku = yaku;
-		return -1;
+		return 1;
 	}
+	//no or no renew yaku
 	return 0;
 }
 
