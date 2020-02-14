@@ -16,12 +16,12 @@ protected:
 	enum class Cellkind { NONE, KOIKOI, MULTICHOICE };
 
 	//札配置位置設定定数
-	const byte xblank = 20;
-	const byte xspace = 10;
-	const byte yblank = 32;
-	const byte yspace = 10;
-	const byte cardwidth = 42;
-	const byte cardheight = 63;
+	const byte xblank = 40;//The left edge of window-The leftmost card space
+	const byte xspace = 30;//The interval of cards
+	const byte yblank = 15;//The upper edge of window-The uppermost card space
+	const byte yspace = 16;//The interval of cards
+	const byte cardwidth = 94;
+	const byte cardheight = 152;
 
 	//ゲーム設定
 	//const byte num_dealfuda = 8;
