@@ -74,3 +74,33 @@ private:
 	int height{0};
 	int graph{0};
 };
+
+
+//from http://www.ics.kagoshima-u.ac.jp/~fuchida/edu/algorithm/sort-algorithm/quick-sort.html & cpped
+
+/*
+   * 軸要素の選択
+   * 順に見て、最初に見つかった異なる2つの要素のうち、
+   * 大きいほうの番号を返します。
+   * 全部同じ要素の場合は -1 を返します。
+   */
+int pivot(int* a, int i, int j);
+
+/*
+ * パーティション分割
+ * a[i]～a[j]の間で、x を軸として分割します。
+ * x より小さい要素は前に、大きい要素はうしろに来ます。
+ * 大きい要素の開始番号を返します。
+ */
+int partition(int* a, int i, int j, int x);
+
+/*
+ * クイックソート（再帰用）
+ * 配列aの、a[i]からa[j]を並べ替えます。
+ */
+void quickSort(int* a, int i, int j);
+
+/*
+ * ソート
+ */
+void sort(int* a, int size_a);

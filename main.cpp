@@ -14,12 +14,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,//インスタンスハンドル
 	_In_ int       nCmdShow)//int howtoshowwindow
 {
 
-	int graphmode = SetGraphMode(SCREEN_HEIGHT, SCREEN_WIDTH, 24);
+	int graphmode = SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
+
 	SetFullScreenResolutionMode(DX_FSRESOLUTIONMODE_MAXIMUM);
 
 	ChangeWindowMode(TRUE);//全画面もーどじゃない:初期化の前に処理しないと一瞬全画面になる
 
-	SetWindowText("まる見え花札");
+	SetWindowText("花札 辛口");
 
 	//SetWindowIconHandle(LoadIcon(hI, MAKEINTRESOURCE(IDI_ICON)));
 
@@ -50,7 +51,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,//インスタンスハンドル
 		if (SceneManager::GetInstance()->Update() != 0)break;
 		SceneManager::GetInstance()->Draw();
 
-		CursorDraw();
+		//CursorDraw();
 
 #ifdef _DEBUG
 		DebugLight();
