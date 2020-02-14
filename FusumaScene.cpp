@@ -5,7 +5,7 @@
 FusumaScene::FusumaScene() {
 	count = 0;
 	leftx_limit = 0;
-	rightx_limit = 640;
+	rightx_limit = SCREEN_WIDTH;
 
 	isclosing = true;
 
@@ -18,10 +18,10 @@ FusumaScene::~FusumaScene() {
 void FusumaScene::Update() {
 
 	leftx_limit = count;
-	rightx_limit = 640 - count;
+	rightx_limit = SCREEN_WIDTH - count;
 
-	if (count == 320) {
-		if (waitcount == 60) {
+	if (count == SCREEN_WIDTH / 2) {
+		if (waitcount == 48) {
 			SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
 			SceneManager::GetInstance()->isvscp = true;
 			isclosing = false;
@@ -29,11 +29,11 @@ void FusumaScene::Update() {
 		waitcount++;
 	}
 
-	if (count < 320) {
-		if (isclosing)count += 8;
+	if (count < SCREEN_WIDTH / 2) {
+		if (isclosing)count += 16;//shutterring speed
 	}
-	if (count <= 320) {
-		if (!isclosing)count -= 8;
+	if (count <= SCREEN_WIDTH / 2) {
+		if (!isclosing)count -= 16;//shutterring speed
 	}
 
 
@@ -46,5 +46,5 @@ void FusumaScene::Update() {
 
 void FusumaScene::Draw() {
 	DrawBox(0, 0, leftx_limit, SCREEN_HEIGHT, WHITE, TRUE);
-	DrawBox(640, 0, rightx_limit, SCREEN_HEIGHT, WHITE, TRUE);
+	DrawBox(SCREEN_WIDTH, 0, rightx_limit, SCREEN_HEIGHT, WHITE, TRUE);
 }

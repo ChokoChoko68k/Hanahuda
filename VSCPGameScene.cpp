@@ -20,7 +20,17 @@ void VSCPGameScene::Update() {
 		break;
 	case Cellkind::KOIKOI:
 		if (teban == 1) {//CPU's turn
-		//TODO
+			//TODO:YakuHanteiの情報をプレイヤーが持っているようにするe.g.赤短何枚とか
+			/*for (int i = 0; i < player[0].index_get.size(); i++) {
+				if (card[player[0].index_get[i]].kind == 20) {
+
+				}
+			}*/
+			//勝負
+			player[teban].score += player[teban].nowscore;
+			player[(teban + 1) % 2].score -= player[teban].nowscore;
+			SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
+			return;
 		}
 
 		if (click_left == 1) {
@@ -126,10 +136,10 @@ void VSCPGameScene::Draw() {
 	case GameScene::Cellkind::NONE:
 		break;
 	case GameScene::Cellkind::KOIKOI:
-		DrawBox(180, 50, 460, 460, BLACK, TRUE);
+		DrawBox(SCREEN_WIDTH / 2 - 200, 50, SCREEN_WIDTH / 2 + 200, SCREEN_HEIGHT - 50, BLACK, TRUE);//x座標は画面中央を基準に真ん中揃え
 		yaku = player[teban].yaku;
 
-		DrawExtendFormatStringToHandle(100, 30, 1.0, 1.0, WHITE, fonthandle, "手番=%d  役=%d", teban, yaku);
+		DrawExtendFormatStringToHandle(SCREEN_WIDTH / 2 - 120+45, 30, 1.0, 1.0, WHITE, fonthandle, "手番=%d  役=%d", teban, yaku);
 
 		nowyakunum = 0;
 		//&演算子は順位が==より低い。括弧を付ける。
@@ -160,8 +170,151 @@ void VSCPGameScene::Draw() {
 int VSCPGameScene::Select() {
 	if (teban == 1) {//CPU's turn
 		//TODO
-	}
+		//候補
+		std::vector<byte> playerplace_candidate;
 
+
+
+		//もし手札に同じ月の札が２枚あり、かつ場札にあるなら
+		int month_saved[8];//一時置き場、配られる札の数
+		for (int i = 0; i < player[1].index_hold.size(); i++) {
+			month_saved[i] = card[player[1].index_hold[i]].month;
+		}
+		//quick sort
+		sort(month_saved, 8);
+
+		//手札に同じ月の札が複数あるか判定
+		for (int i = 0; i < 8; i++) {//month_savedの何番目か
+			int month_detected = 0;
+			if (month_detected == month_saved[i]) {//順番に並べた手札で一つ前の札と月が同じ＝＝同じ月の札が複数ある
+				//場札の月と一致しているか
+				for (int j = 0; j < field.size(); j++) {
+					if (card[field[j]].month == month_detected) {
+						//一致していればその月の手札を全部候補に
+						for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
+							if (card[player[1].index_hold[k]].month == month_detected) {
+								playerplace_candidate.push_back(k);
+							}
+						}
+					}
+				}
+			}
+			else {
+				month_detected = month_saved[i];
+			}
+		}
+		//候補のうちの点数の大きい方を使う:kindが20ならそれ、そうでなければ10->5->0と優先度合いを下げる
+		if (playerplace_candidate.size() != 0) {
+			for (int l = 0; l < playerplace_candidate.size(); l++) {
+				if (card[playerplace_candidate[l]].kind == 20)return l;
+			}
+			for (int l = 0; l < playerplace_candidate.size(); l++) {
+				if (card[playerplace_candidate[l]].kind == 10)return l;
+			}
+			for (int l = 0; l < playerplace_candidate.size(); l++) {
+				if (card[playerplace_candidate[l]].kind == 5)return l;
+			}
+			//カス札しかないなら、光札のある月をねらう
+			for (int i = 0; i < playerplace_candidate.size(); i++) {
+				if (card[playerplace_candidate[i]].month == 1
+					|| card[playerplace_candidate[i]].month == 3
+					|| card[playerplace_candidate[i]].month == 8
+					|| card[playerplace_candidate[i]].month == 11
+					|| card[playerplace_candidate[i]].month == 12) {
+					return i;
+				}
+			}
+			//睦月・弥生・葉月・霜月・師走もないなら最初の候補札で
+			return playerplace_candidate[0];
+		}
+
+
+
+
+
+		//自分が何の役を目指すかに沿う:int nerauyakuを作っておく、nerauyakuは4T目終了時点で最も近いものに決定
+		//if(nerauyaku == kou)...
+		//return;
+		/*/候補のうちの点数の大きい方を使う:kindが20ならそれ、そうでなければ10->5->0と優先度合いを下げる
+		if (playerplace_candidate.size() != 0) {
+			for (int l = 0; l < playerplace_candidate.size(); l++) {
+				if (card[playerplace_candidate[l]].kind == 20)return l;
+			}
+			for (int l = 0; l < playerplace_candidate.size(); l++) {
+				if (card[playerplace_candidate[l]].kind == 10)return l;
+			}
+			for (int l = 0; l < playerplace_candidate.size(); l++) {
+				if (card[playerplace_candidate[l]].kind == 5)return l;
+			}
+			//カス札しかないなら、光札のある月をねらう
+			for (int i = 0; i < playerplace_candidate.size(); i++) {
+				if (card[playerplace_candidate[i]].month == 1
+					|| card[playerplace_candidate[i]].month == 3
+					|| card[playerplace_candidate[i]].month == 8
+					|| card[playerplace_candidate[i]].month == 11
+					|| card[playerplace_candidate[i]].month == 12) {
+					return i;
+				}
+			}
+			//睦月・弥生・葉月・霜月・師走もないなら最初の候補札で
+			return playerplace_candidate[0];
+		}*/
+
+
+
+
+
+
+		//場札・手札を見て点数の大きい方を使う
+		for (int i = 0; i < field.size(); i++) {
+			if (card[field[i]].kind == 20) {
+				for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
+					if (card[player[1].index_hold[k]].month == card[field[i]].month) {
+						return k;
+					}
+				}
+			}
+		}
+		for (int l = 0; l < player[1].index_hold.size(); l++) {
+			if (card[player[1].index_hold[l]].kind == 20)return l;
+		}
+		for (int i = 0; i < field.size(); i++) {
+			if (card[field[i]].kind == 10) {
+				for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
+					if (card[player[1].index_hold[k]].month == card[field[i]].month) {
+						return k;
+					}
+				}
+			}
+		}
+		for (int l = 0; l < player[1].index_hold.size(); l++) {
+			if (card[player[1].index_hold[l]].kind == 10)return l;
+		}
+		for (int i = 0; i < field.size(); i++) {
+			if (card[field[i]].kind == 5) {
+				for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
+					if (card[player[1].index_hold[k]].month == card[field[i]].month) {
+						return k;
+					}
+				}
+			}
+		}
+		for (int l = 0; l < player[1].index_hold.size(); l++) {
+			if (card[player[1].index_hold[l]].kind == 5)return l;
+		}
+		//カス札しかないなら、光札のある月をねらう
+		for (int i = 0; i < player[1].index_hold.size(); i++) {
+			if (card[player[1].index_hold[i]].month == 1
+				|| card[player[1].index_hold[i]].month == 3
+				|| card[player[1].index_hold[i]].month == 8
+				|| card[player[1].index_hold[i]].month == 11
+				|| card[player[1].index_hold[i]].month == 12) {
+				return i;
+			}
+		}
+		//睦月・弥生・葉月・霜月・師走もないなら最初の札で
+		return 0;
+	}
 	if (click_left == 1) {
 		if (teban == 0) {//player's turn
 			if (mousex < xblank + (cardwidth + xspace) * 2) {//if mousecursor is in player1 area
@@ -183,6 +336,7 @@ int VSCPGameScene::Select() {
 int VSCPGameScene::Choose() {
 	if (teban == 1) {//CPU's turn
 		//TODO
+		return 0;
 	}
 	if (click_left == 1) {
 		if (teban == 0) {//player's turn
@@ -202,4 +356,36 @@ int VSCPGameScene::Choose() {
 /*
 タイトル画面からこちらに来るのはいいのだが、一回リザルト画面に行くとSceneID::GAMEでつくってしまう
 nextsceneidを持っておくか->bool isvscpで茶を濁す
+
+
+CPU AI
+
+case KOIKOI:
+	//相手の得た札がリーチじゃない：光札２枚未満、タネ４枚未満、タン４枚未満、カス８枚未満ならこいこい
+Select(){
+	//もし手札に同じ月の札が２枚あり、かつ場札にあるなら
+	////それの点数の大きい方を使う
+	//候補が存在するなら判定してreturn;
+
+	//自分が何の役を目指すかに沿う:int nerauyakuを作っておく、nerauyakuは4T目終了時点で最も近いものに決定：if(nerauyaku == kou)...
+	//候補が存在するなら判定してreturn;
+
+	//場札・手札を見て最も得点が高いやつ
+	//カス札しかないなら光札を優先：松・桜・芒・柳・桐
+	return 0;
+}
+
+Choose(){
+	//自分が何の役を目指すかに沿う:int nerauyakuを作っておく、nerauyakuは4T目終了時点で最も近いものに決定
+	//
+	return;
+
+	//選択札を見て最も得点が高いやつ
+	return;
+}
+
+
+
+「候補をvectorに数個選ぶ→得点の高いor光札」という形式に抽象化できるのでは？？？
+
 */

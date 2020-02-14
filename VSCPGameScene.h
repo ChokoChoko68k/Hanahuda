@@ -4,6 +4,7 @@ CPU対戦専用ゲームシーン
 #pragma once
 #include"GameScene.h"
 #include"utility.h"
+#include<vector>
 
 class VSCPGameScene :public GameScene
 {
