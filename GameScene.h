@@ -5,21 +5,26 @@
 */
 #pragma once
 #include"Scene.h"
+#include"Choko.h"
 #include<vector>
 
 typedef unsigned char byte;
 
 class GameScene : public Scene {
-private:
+protected:
 
 	enum class Cellkind { NONE, KOIKOI, MULTICHOICE };
 
-	const byte xblank = 20;
-	const byte xspace = 10;
-	const byte yblank = 32;
-	const byte yspace = 10;
-	const byte cardwidth = 42;
-	const byte cardheight = 63;
+	//札配置位置設定定数
+	const byte xblank = 40;//The left edge of window-The leftmost card space
+	const byte xspace = 30;//The interval of cards
+	const byte yblank = 15;//The upper edge of window-The uppermost card space
+	const byte yspace = 16;//The interval of cards
+	const byte cardwidth = 94;
+	const byte cardheight = 152;
+
+	//ゲーム設定
+	//const byte num_dealfuda = 8;
 
 	//札クラス
 	struct Card {
@@ -37,9 +42,9 @@ private:
 		int nowscore;//そのラウンドで取得し点：初期値０；「勝負」するまで持ち点に加えられない
 		//役判定用
 		unsigned int yaku;
-		unsigned int num_kasu;
-		unsigned int num_tan;
-		unsigned int num_tane;
+		int num_kasu;
+		int num_tan;
+		int num_tane;
 		//手札に持っているカードのインデックス：0から47
 		std::vector<byte> index_hold;
 		std::vector<byte> index_get;
@@ -68,6 +73,8 @@ private:
 	Card card[48];
 	Player player[2];
 
+	Button button[2];
+
 	std::vector<byte> deck;//山札
 	std::vector<byte> field;//場札
 
@@ -78,26 +85,31 @@ private:
 	byte teban;//手番は誰か
 
 	int graph_back;
+	int graph_ura;
 
 	int holdplace_selected;//byteにしたいが-1を入れるのでint;符号なしに-1して255出すエラーやりました
 
 	std::vector<byte> samemonthcard;//その札がfieldで何番目なのかが入る。出札と同じ月の札が場に複数あった場合に使う
 
-	int CardDataLoad();
-	void Shuffle();
-	bool IsDealOK();//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセットする
-	void Deal();//配る
-	int Select();//手札から場に出す札を選択
-	int Trash(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
-	int Choose();//場に同じ月のものが複数あった場合の、場札選択
-	void DeckToField();
-	int YakuHantei();
+	virtual void Init(int _gamenum, int _teban, int _score_player0, int _score_player1);
+	virtual int CardDataLoad();
+	virtual void Shuffle();
+	virtual bool IsDealOK();//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセットする
+	virtual void Deal();//配る
+	virtual int Select();//手札から場に出す札を選択
+	virtual int Trash(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
+	virtual int Choose();//場に同じ月のものが複数あった場合の、場札選択
+	virtual void DeckDraw();
+	virtual int YakuHantei();//役が出来たり、役の更新があったときに0以外を返す
 public:
-	GameScene(int _gamenum, int _teban, int _score_player0, int _score_player1);
-	~GameScene();
+	GameScene() {};//なぜかデフォコンが無いとで継承先でエラーが出る
+	GameScene(int _gamenum, int _teban, int _score_player0, int _score_player1) {
+		Init(_gamenum, _teban, _score_player0, _score_player1);
+	};
+	virtual ~GameScene() {};
 
-	void Update();
-	void Draw();
+	virtual void Update();
+	virtual void Draw();
 
 };
 
