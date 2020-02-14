@@ -16,7 +16,7 @@ ResultScene::ResultScene(int _gamenum, int _teban, int _score_player0, int _scor
 
 	winner = -1;
 	//6‰ñíor‰„’·íI—¹‚©H
-	if (gamenum >= 2 && score_player0 != score_player1) {
+	if (gamenum >= 2 && score_player0 != score_player1) {//now,2-win-game for debugging
 		if (score_player0 > score_player1)winner = 0;
 		if (score_player0 < score_player1)winner = 1;
 	}
