@@ -4,19 +4,19 @@ C++ Code for making HANAHUDA videogame by using Dx-Library(https://dxlib.xsrv.jp
 
 ## Getting Started
 
-Download these files and Download DxLib from https://dxlib.xsrv.jp/
-
-## Assumed build enviroment
-
-Visual Studio 2020 Community 
+Download these files and Download DxLib from https://dxlib.xsrv.jp/ 
 
 ## Prepare Image Files
 
-- Please make graphic directory and,
+- Please make "graphic" directory and prepare next by yourself,
   - 0.png~47.png   image of cards, assumed size is width94px heitght152px
   - ura.png   outside of cards
   - BG.png   BackgroundImage of gamescene
   - title.png   titlescreen
+
+## Assumed build enviroment
+
+Visual Studio 2020 Community
 
 ## License
 
