@@ -31,5 +31,5 @@
 Log.txt
 
 #Visual Studio build file
-/.vs
-/x64
+/.vs/
+/x64/
