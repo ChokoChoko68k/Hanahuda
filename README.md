@@ -13,4 +13,4 @@ The code is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) fi
 !!About licence relating to DxLib, see and obey their licence(https://dxlib.xsrv.jp/dxlicense.html)!!
 
 ## Contact
-ちょこちょこ(ちょこ猪口,chokochoko)(Twitter.com/cck68k)
+ちょこちょこ(ちょこ猪口,chokochoko)(https://twitter.com/cck68k)
