@@ -10,6 +10,14 @@ Download these files and Download DxLib from https://dxlib.xsrv.jp/
 
 Visual Studio 2020 Community 
 
+## Prepare Image Files
+
+- Please make graphic directory and,
+  - 0.png~47.png   image of cards, assumed size is width94px heitght152px
+  - ura.png   outside of cards
+  - BG.png   BackgroundImage of gamescene
+  - title.png   titlescreen
+
 ## License
 
 The code is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
