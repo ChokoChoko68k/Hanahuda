@@ -9,9 +9,9 @@ Download these files and Download DxLib from https://dxlib.xsrv.jp/dxdload.html
 ## Prepare Image Files
 
 - Please make "graphic" directory and prepare next by yourself,
-  - 0.png~47.png   image of cards, assumed size is width94px heitght152px
+  - 0.png~47.png   image of cards, assumed size is width94px height152px
   - ura.png   outside of cards
-  - BG.png   BackgroundImage of gamescene
+  - BG.png   BackGround image of gamescene
   - title.png   titlescreen
 
 ## Assumed Build-Enviroment
