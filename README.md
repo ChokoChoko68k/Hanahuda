@@ -1,10 +1,10 @@
 # Hanahuda（花札辛口）
 
-C++ Code for making HANAHUDA videogame by using Dx-Library(https://dxlib.xsrv.jp/) as Windows application
+C++ code for making HANAHUDA videogame by using Dx-Library(https://dxlib.xsrv.jp/) as Windows application
 
 ## Getting Started
 
-Download these files and Download DxLib from https://dxlib.xsrv.jp/ 
+Download these files and Download DxLib from https://dxlib.xsrv.jp/dxdload.html
 
 ## Prepare Image Files
 
