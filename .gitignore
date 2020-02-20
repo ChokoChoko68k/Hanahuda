@@ -30,3 +30,6 @@
 #DxLib execution log file
 Log.txt
 
+#Visual Studio file
+.vs/
+x64/
