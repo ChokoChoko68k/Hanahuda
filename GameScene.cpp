@@ -211,7 +211,7 @@ void GameScene::Draw() {
 	case GameScene::Cellkind::NONE:
 		break;
 	case GameScene::Cellkind::KOIKOI:
-		DrawBox(40, yblank + (cardheight + yspace) * 1, 40 + 300, yblank + (cardheight + yspace) * 2 + cardheight, BLACK, TRUE);//x座標は画面中央を基準に真ん中揃え
+		DrawBox(40, yblank + (cardheight + yspace) * 1, 250/*not to overlap field*/, yblank + (cardheight + yspace) * 2 + cardheight, BLACK, TRUE);//x座標は画面中央を基準に真ん中揃え
 		yaku = player[teban].yaku;
 
 		//for debug
@@ -230,8 +230,8 @@ void GameScene::Draw() {
 		if ((yaku & 0x0100) == 0x0100) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "青タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
 		if ((yaku & 0x0200) == 0x0200) { DrawExtendFormatStringToHandle(40, 10 + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "猪鹿蝶　　%d文", 5); nowyakunum++; }
 
-		DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
-		DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + 30, 1.0, 1.0, WHITE, fonthandle, "はい　　　いいえ");
+		DrawExtendFormatStringToHandle(40+20, yblank + (cardheight + yspace) * 2, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
+		DrawExtendFormatStringToHandle(40+20, yblank + (cardheight + yspace) * 2 + 30, 1.0, 1.0, WHITE, fonthandle, "はい　　　いいえ");
 		break;
 	case GameScene::Cellkind::MULTICHOICE:
 		DrawBox(180, 400, 460, 460, BLACK, TRUE);
