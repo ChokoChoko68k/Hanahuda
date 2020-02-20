@@ -1,11 +1,14 @@
 # Hanahuda（花札辛口）
 
-Maiking videogame using by DxLibrary(https://dxlib.xsrv.jp/)for windows
+Making videogame by using Dx-Library(https://dxlib.xsrv.jp/) as windows application
 
 ## Getting Started
 
-Clone or Download these files and Download DxLib from https://dxlib.xsrv.jp/
-Assumed build enviroment:Visual Studio 2020 Community 
+Download these files and Download DxLib from https://dxlib.xsrv.jp/
+
+## Assumed build enviroment
+
+Visual Studio 2020 Community 
 
 ## License
 
