@@ -14,7 +14,7 @@ Download these files and Download DxLib from https://dxlib.xsrv.jp/dxdload.html
   - BG.png   BackgroundImage of gamescene
   - title.png   titlescreen
 
-## Assumed build enviroment
+## Assumed Build-Enviroment
 
 Visual Studio 2020 Community
 
