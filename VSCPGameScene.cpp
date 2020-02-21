@@ -155,19 +155,21 @@ void VSCPGameScene::Draw() {
 
 		nowyakunum = 0;//現在できている役の数。描画の位置調整も兼ねる
 		//&演算子は順位が==より低い。括弧を付ける。
-		if ((yaku & 0x0001) == 0x0001) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "カス　　%d文", 1 + player[teban].num_kasu - 10); nowyakunum++; }
-		if ((yaku & 0x0002) == 0x0002) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タン　　%d文", 1 + player[teban].num_tan - 5); nowyakunum++; }
-		if ((yaku & 0x0004) == 0x0004) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タネ　　%d文", 1 + player[teban].num_tane - 5); nowyakunum++; }
-		if ((yaku & 0x0008) == 0x0008) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "三光　　%d文", 5); nowyakunum++; }
-		if ((yaku & 0x0010) == 0x0010) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "雨四光　　%d文", 8); nowyakunum++; }
-		if ((yaku & 0x0020) == 0x0020) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "四光　　%d文", 10); nowyakunum++; }
-		if ((yaku & 0x0040) == 0x0040) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "五光　　%d文", 15); nowyakunum++; }
-		if ((yaku & 0x0080) == 0x0080) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "赤タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
-		if ((yaku & 0x0100) == 0x0100) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "青タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
-		if ((yaku & 0x0200) == 0x0200) { DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2 + cardheight + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "猪鹿蝶　　%d文", 5); nowyakunum++; }
+		if ((yaku & 0x0001) == 0x0001) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "カス　　%d文", 1 + player[teban].num_kasu - 10); nowyakunum++; }
+		if ((yaku & 0x0002) == 0x0002) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タン　　%d文", 1 + player[teban].num_tan - 5); nowyakunum++; }
+		if ((yaku & 0x0004) == 0x0004) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "タネ　　%d文", 1 + player[teban].num_tane - 5); nowyakunum++; }
+		if ((yaku & 0x0008) == 0x0008) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "三光　　%d文", 5); nowyakunum++; }
+		if ((yaku & 0x0010) == 0x0010) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "雨四光　　%d文", 8); nowyakunum++; }
+		if ((yaku & 0x0020) == 0x0020) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "四光　　%d文", 10); nowyakunum++; }
+		if ((yaku & 0x0040) == 0x0040) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "五光　　%d文", 15); nowyakunum++; }
+		if ((yaku & 0x0080) == 0x0080) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "赤タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
+		if ((yaku & 0x0100) == 0x0100) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "青タン　　%d文", 5 + player[teban].num_tan - 3); nowyakunum++; }
+		if ((yaku & 0x0200) == 0x0200) { DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 1 + 10/* 10 is between box ceil and string ceil*/ + nowyakunum * 30, 1.0, 1.0, WHITE, fonthandle, "猪鹿蝶　　%d文", 5); nowyakunum++; }
 
-		DrawExtendFormatStringToHandle(40, yblank + (cardheight + yspace) * 2, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
+		DrawExtendFormatStringToHandle(40 + 10, yblank + (cardheight + yspace) * 2, 1.0, 1.0, WHITE, fonthandle, "こいこいしますか？");
+		DrawBox(SCREEN_WIDTH / 2 - 60 - 10, yblank + (cardheight + yspace) * 2 + 30 - 10, SCREEN_WIDTH / 2 - 60 - 10 + 80, yblank + (cardheight + yspace) * 2 + 30 - 10 + 30, BLACK, TRUE);
 		DrawExtendFormatStringToHandle(SCREEN_WIDTH / 2 - 60, yblank + (cardheight + yspace) * 2 + 30, 1.0, 1.0, WHITE, fonthandle, "はい");
+		DrawBox(SCREEN_WIDTH / 2 + 60 - 10, yblank + (cardheight + yspace) * 2 + 30 - 10, SCREEN_WIDTH / 2 + 60 - 10 + 80, yblank + (cardheight + yspace) * 2 + 30 - 10 + 30, BLACK, TRUE);
 		DrawExtendFormatStringToHandle(SCREEN_WIDTH / 2 + 60, yblank + (cardheight + yspace) * 2 + 30, 1.0, 1.0, WHITE, fonthandle, "いいえ");
 		break;
 	case GameScene::Cellkind::MULTICHOICE:
