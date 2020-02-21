@@ -16,7 +16,7 @@ Download these files and Download DxLib from https://dxlib.xsrv.jp/dxdload.html
 
 ## Assumed Build-Enviroment
 
-Visual Studio 2020 Community
+Visual Studio 2019 Community
 
 ## License
 
