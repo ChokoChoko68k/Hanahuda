@@ -128,8 +128,7 @@ void VSCPGameScene::Draw() {
 	for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {//CPなので手札は見せない
 #ifdef _DEBUG
 		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 0, card[player[1].index_hold[i]].graph, FALSE);
-#endif
-#ifndef _DEBUG
+#else
 		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 0, graph_ura, FALSE);
 #endif
 	}
@@ -188,149 +187,19 @@ int VSCPGameScene::Select() {
 		//候補
 		std::vector<byte> playerplace_candidate;
 
-
-
-		//もし手札に同じ月の札が２枚あり、かつ場札にあるなら
-		int month_saved[8];//一時置き場、配られる札の数
-		for (int i = 0; i < player[1].index_hold.size(); i++) {
-			month_saved[i] = card[player[1].index_hold[i]].month;
-		}
-		//quick sort
-		sort(month_saved, 8);
-
-		//手札に同じ月の札が複数あるか判定
-		for (int i = 0; i < 8; i++) {//month_savedの何番目か
-			int month_detected = 0;
-			if (month_detected == month_saved[i]) {//順番に並べた手札で一つ前の札と月が同じ＝＝同じ月の札が複数ある
-				//場札の月と一致しているか
-				for (int j = 0; j < field.size(); j++) {
-					if (card[field[j]].month == month_detected) {
-						//一致していればその月の手札を全部候補に
-						for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
-							if (card[player[1].index_hold[k]].month == month_detected) {
-								playerplace_candidate.push_back(k);
-							}
-						}
-					}
-				}
-			}
-			else {
-				month_detected = month_saved[i];
-			}
-		}
-		//場札のうちの点数の大きい方を使う:kindが20ならそれ、そうでなければ10->5->0と優先度合いを下げる//場札じゃなくてプレイヤーの札になっとるTODO
+		//もし手札に同じ月の札が２枚あり、かつ場札にあるならその月を優先
+		playerplace_candidate=DiscardSameMonth();
 		if (playerplace_candidate.size() != 0) {
-			for (int l = 0; l < (signed int)playerplace_candidate.size(); l++) {
-				if (card[playerplace_candidate[l]].kind == 20)return l;
-			}
-			for (int l = 0; l < (signed int)playerplace_candidate.size(); l++) {
-				if (card[playerplace_candidate[l]].kind == 10)return l;
-			}
-			for (int l = 0; l < (signed int)playerplace_candidate.size(); l++) {
-				if (card[playerplace_candidate[l]].kind == 5)return l;
-			}
-			//カス札しかないなら、光札のある月をねらう
-			for (int i = 0; i < (signed int)playerplace_candidate.size(); i++) {
-				if (card[playerplace_candidate[i]].month == 1
-					|| card[playerplace_candidate[i]].month == 3
-					|| card[playerplace_candidate[i]].month == 8
-					|| card[playerplace_candidate[i]].month == 11
-					|| card[playerplace_candidate[i]].month == 12) {
-					return i;
-				}
-			}
-			//睦月・弥生・葉月・霜月・師走もないなら最初の候補札で
-			return playerplace_candidate[0];
+			return FilterCandidate(playerplace_candidate);
 		}
-
-
-
-
+		
+		//場札のうちの点数の大きい方を使う:kindが20ならそれ、そうでなければ10->5->0と優先度合いを下げる//場札じゃなくてプレイヤーの札になっとるTODO
+		return FieldBigger();
 
 		//自分が何の役を目指すかに沿う:int nerauyakuを作っておく、nerauyakuは4T目終了時点で最も近いものに決定
-		//if(nerauyaku == kou)...
-		//return;
-		/*/候補のうちの点数の大きい方を使う:kindが20ならそれ、そうでなければ10->5->0と優先度合いを下げる
-		if (playerplace_candidate.size() != 0) {
-			for (int l = 0; l < playerplace_candidate.size(); l++) {
-				if (card[playerplace_candidate[l]].kind == 20)return l;
-			}
-			for (int l = 0; l < playerplace_candidate.size(); l++) {
-				if (card[playerplace_candidate[l]].kind == 10)return l;
-			}
-			for (int l = 0; l < playerplace_candidate.size(); l++) {
-				if (card[playerplace_candidate[l]].kind == 5)return l;
-			}
-			//カス札しかないなら、光札のある月をねらう
-			for (int i = 0; i < playerplace_candidate.size(); i++) {
-				if (card[playerplace_candidate[i]].month == 1
-					|| card[playerplace_candidate[i]].month == 3
-					|| card[playerplace_candidate[i]].month == 8
-					|| card[playerplace_candidate[i]].month == 11
-					|| card[playerplace_candidate[i]].month == 12) {
-					return i;
-				}
-			}
-			//睦月・弥生・葉月・霜月・師走もないなら最初の候補札で
-			return playerplace_candidate[0];
-		}*/
-
-
-
-
-
-
-		//場札・手札を見て点数の大きい方を使う
-		for (int i = 0; i < (signed int)field.size(); i++) {
-			if (card[field[i]].kind == 20) {
-				for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
-					if (card[player[1].index_hold[k]].month == card[field[i]].month) {
-						return k;
-					}
-				}
-			}
-		}
-		for (int l = 0; l < (signed int)player[1].index_hold.size(); l++) {
-			if (card[player[1].index_hold[l]].kind == 20)return l;
-		}
-		for (int i = 0; i < (signed int)field.size(); i++) {
-			if (card[field[i]].kind == 10) {
-				for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
-					if (card[player[1].index_hold[k]].month == card[field[i]].month) {
-						return k;
-					}
-				}
-			}
-		}
-		for (int l = 0; l < (signed int)player[1].index_hold.size(); l++) {
-			if (card[player[1].index_hold[l]].kind == 10)return l;
-		}
-		for (int i = 0; i < (signed int)field.size(); i++) {
-			if (card[field[i]].kind == 5) {
-				for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
-					if (card[player[1].index_hold[k]].month == card[field[i]].month) {
-						return k;
-					}
-				}
-			}
-		}
-		for (int l = 0; l < (signed int)player[1].index_hold.size(); l++) {
-			if (card[player[1].index_hold[l]].kind == 5)return l;
-		}
-		//カス札しかないなら、光札のある月をねらう
-		for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {
-			if (card[player[1].index_hold[i]].month == 1
-				|| card[player[1].index_hold[i]].month == 3
-				|| card[player[1].index_hold[i]].month == 8
-				|| card[player[1].index_hold[i]].month == 11
-				|| card[player[1].index_hold[i]].month == 12) {
-				return i;
-			}
-		}
-		//睦月・弥生・葉月・霜月・師走もないなら最初の札で
-		return 0;
+		//TowardYaku();
 	}
-	if (click_left == 1) {//player's turn
+	else if (click_left == 1) {//player's turn
 		if (teban == 0) {
 			if (yblank + (cardheight + yspace) * 3 <= mousey && mousey <= yblank + (cardheight + yspace) * 3 + cardheight) {//if mousecursor is near player1 area
 				for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
@@ -342,6 +211,103 @@ int VSCPGameScene::Select() {
 		}
 	}
 	return -1;//still no card selected
+}
+
+std::vector<byte> VSCPGameScene::DiscardSameMonth(){
+	int month_saved[8];//一時置き場、配られる札の数
+	for (int i = 0; i < player[1].index_hold.size(); i++) {
+		month_saved[i] = card[player[1].index_hold[i]].month;
+	}
+	//quick sort
+	sort(month_saved, 8);
+	
+	//手札に同じ月の札が複数あるか判定
+	std::vector<byte>pp_candidate;//playerplace_candidateへ帰る
+	int month_detected = 0;//month_savedをループで調べたとき、一枚前の札の月：month_saved_saved
+	for (int i = 0; i < 8; i++) {//month_savedの何番目か
+		if (month_detected == month_saved[i]) {//月を順番に並べた手札で一つ前の札と月が同じ＝＝同じ月の札が複数ある//手札が一枚でも減ると-858993460(初期化だけした値)が入る
+			//場札の月と一致しているか
+			for (int j = 0; j < field.size(); j++) {
+				if (card[field[j]].month == month_detected) {
+					//一致していればその月の手札を全部候補に
+					for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
+						if (card[player[1].index_hold[k]].month == month_detected) {
+							pp_candidate.push_back(k);
+						}
+					}
+				}
+			}
+		}
+		else {
+			month_detected = month_saved[i];//次の月へ
+		}
+	}
+	return pp_candidate;
+}
+
+//int VSCPGameScene::TowardYaku(){if(nerauyaku == kou)...};
+
+byte VSCPGameScene::FilterCandidate(std::vector<byte> pp_c) {//候補を絞り込む。点数の大きいもの・光札のある月
+	//得点の高い方を
+	for (int l = 0; l < pp_c.size(); l++) {
+		if (card[pp_c[l]].kind == 20)return pp_c[l];
+	}
+	for (int l = 0; l < pp_c.size(); l++) {
+		if (card[pp_c[l]].kind == 10)return pp_c[l];
+	}
+	for (int l = 0; l < pp_c.size(); l++) {
+		if (card[pp_c[l]].kind == 5)return pp_c[l];
+	}
+	//カス札しかないなら、光札のある月をねらう
+	for (int i = 0; i < pp_c.size(); i++) {
+		if (card[pp_c[i]].month == 1
+			|| card[pp_c[i]].month == 3
+			|| card[pp_c[i]].month == 8
+			|| card[pp_c[i]].month == 11
+			|| card[pp_c[i]].month == 12) {
+			return pp_c[i];
+		}
+	}
+	//カス札のみで睦月・弥生・葉月・霜月・師走もないなら最初の候補札でいいや
+	return pp_c[0];
+}
+byte VSCPGameScene::FieldBigger() {
+	//得点の高い方を
+	for (int i = 0; i < field.size(); i++) {
+		if (card[field[i]].kind == 20) {
+			for (int j = 0; j < player[1].index_hold.size(); j++) {
+				if(card[player[1].index_hold[j]].month == card[field[i]].month)return j;
+			}
+		}
+	}
+	for (int i = 0; i < field.size(); i++) {
+		if (card[field[i]].kind == 10) {
+			for (int j = 0; j < player[1].index_hold.size(); j++) {
+				if (card[player[1].index_hold[j]].month == card[field[i]].month)return j;
+			}
+		}
+	}
+	for (int i = 0; i < field.size(); i++) {
+		if (card[field[i]].kind == 5) {
+			for (int j = 0; j < player[1].index_hold.size(); j++) {
+				if (card[player[1].index_hold[j]].month == card[field[i]].month)return j;
+			}
+		}
+	}
+	//カス札しかないなら、光札のある月をねらう
+	for (int i = 0; i < field.size(); i++) {
+		if (card[field[i]].month == 1
+			|| card[field[i]].month == 3
+			|| card[field[i]].month == 8
+			|| card[field[i]].month == 11
+			|| card[field[i]].month == 12) {
+			for (int j = 0; j < player[1].index_hold.size(); j++) {
+				if (card[player[1].index_hold[j]].month == card[field[i]].month)return j;
+			}
+		}
+	}
+	//カス札のみで睦月・弥生・葉月・霜月・師走もないなら最初の候補札でいいや
+	return 0;
 }
 
 //場札に同じ月の札が複数あった場合に行う選択

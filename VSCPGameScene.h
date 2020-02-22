@@ -19,6 +19,12 @@ public:
 	void Draw();
 	int Select();
 	int Choose();
+
+	//for CPAI
+	std::vector<byte> DiscardSameMonth();
+	//int VSCPGameScene::TowardYaku();
+	byte FilterCandidate(std::vector<byte> playerplace_candidate);//Œó•â‚ği‚è‚ŞB“_”‚Ì‘å‚«‚¢‚à‚ÌEŒõD‚Ì‚ ‚éŒ//Filter‚Æ‚¢‚¢‚Â‚Â•Ô‚·‚Ì‚Í—Bˆê‚Â
+	byte FieldBigger();
 private:
 
 };

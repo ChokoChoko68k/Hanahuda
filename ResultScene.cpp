@@ -62,7 +62,6 @@ void ResultScene::Draw() {
 	DrawBox(0, 0, leftx_limit, SCREEN_HEIGHT, BLACK, TRUE);
 	DrawBox(SCREEN_WIDTH, 0, rightx_limit, SCREEN_HEIGHT, BLACK, TRUE);
 	if (count == SCREEN_WIDTH / 2) {
-		//DrawExtendFormatString(0, 100, 1.0, 1.0, WHITE, "%d回戦　%d：%d点　%d：%d点", gamenum, teban, score_player0, (teban + 1) % 2, score_player1);//だと手番が逆だった
 		DrawExtendFormatString(0, 100, 1.0, 1.0, WHITE, "%d回戦　%d：%d点　%d：%d点", gamenum, (teban + 1) % 2, score_player0, teban, score_player1);
 		if (winner != -1)DrawExtendFormatString(300, 200, 1.0, 1.0, 0x5af59, "%dの勝ち", winner);
 	}
