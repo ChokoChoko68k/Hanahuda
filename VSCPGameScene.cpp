@@ -248,23 +248,23 @@ std::vector<byte> VSCPGameScene::DiscardSameMonth(){
 //int VSCPGameScene::TowardYaku(){if(nerauyaku == kou)...};
 
 byte VSCPGameScene::FilterCandidate(std::vector<byte> pp_c) {//候補を絞り込む。点数の大きいもの・光札のある月
-	//得点の高い方を
+	//得点の高い方を//TODO桜のタンと桜のカスで後者の方とりおった
 	for (int l = 0; l < pp_c.size(); l++) {
-		if (card[pp_c[l]].kind == 20)return pp_c[l];
+		if (card[player[1].index_hold[pp_c[l]]].kind == 20)return pp_c[l];
 	}
 	for (int l = 0; l < pp_c.size(); l++) {
-		if (card[pp_c[l]].kind == 10)return pp_c[l];
+		if (card[player[1].index_hold[pp_c[l]]].kind == 10)return pp_c[l];
 	}
 	for (int l = 0; l < pp_c.size(); l++) {
-		if (card[pp_c[l]].kind == 5)return pp_c[l];
+		if (card[player[1].index_hold[pp_c[l]]].kind == 5)return pp_c[l];
 	}
 	//カス札しかないなら、光札のある月をねらう
 	for (int i = 0; i < pp_c.size(); i++) {
-		if (card[pp_c[i]].month == 1
-			|| card[pp_c[i]].month == 3
-			|| card[pp_c[i]].month == 8
-			|| card[pp_c[i]].month == 11
-			|| card[pp_c[i]].month == 12) {
+		if (card[player[1].index_hold[pp_c[i]]].month == 1
+			|| card[player[1].index_hold[pp_c[i]]].month == 3
+			|| card[player[1].index_hold[pp_c[i]]].month == 8
+			|| card[player[1].index_hold[pp_c[i]]].month == 11
+			|| card[player[1].index_hold[pp_c[i]]].month == 12) {
 			return pp_c[i];
 		}
 	}
@@ -294,19 +294,23 @@ byte VSCPGameScene::FieldBigger() {
 			}
 		}
 	}
-	//カス札しかないなら、光札のある月をねらう
-	for (int i = 0; i < field.size(); i++) {
-		if (card[field[i]].month == 1
-			|| card[field[i]].month == 3
-			|| card[field[i]].month == 8
-			|| card[field[i]].month == 11
-			|| card[field[i]].month == 12) {
-			for (int j = 0; j < player[1].index_hold.size(); j++) {
-				if (card[player[1].index_hold[j]].month == card[field[i]].month)return j;
-			}
+	for (int i = 0; i < field.size(); i++) {//カス札
+		for (int j = 0; j < player[1].index_hold.size(); j++) {
+			if (card[player[1].index_hold[j]].month == card[field[i]].month)return j;
 		}
 	}
-	//カス札のみで睦月・弥生・葉月・霜月・師走もないなら最初の候補札でいいや
+	//月が一致しないので捨てることになる
+	//場札に光札のある月を捨てたくない（盗られる可能性あるから）
+	for (int i = 0; i < player[1].index_hold.size(); i++) {
+		if (card[player[1].index_hold[i]].month != 1
+			&& card[player[1].index_hold[i]].month != 3
+			&& card[player[1].index_hold[i]].month != 8
+			&& card[player[1].index_hold[i]].month != 11
+			&& card[player[1].index_hold[i]].month != 12) {
+			return i;
+		}
+	}
+	//カス札のみで睦月・弥生・葉月・霜月・師走しかないなら最初の候補札でいいや
 	return 0;
 }
 
@@ -319,7 +323,7 @@ int VSCPGameScene::Choose() {
 	if (click_left == 1) {//player'sturn
 		if (teban == 0) {
 			for (int i = 0; i < (signed int)samemonthcard.size(); i++) {
-				int num = samemonthcard[i];/////////////////////////////////
+				int num = samemonthcard[i];
 				if (num < 10) {
 					if ((SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 1 * (cardwidth + xspace) + (num / 2) * (cardwidth + xspace)) <= mousex && mousex <= (SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 1 * (cardwidth + xspace) + (num / 2) * (cardwidth + xspace) + cardwidth) && yblank + (1 + num % 2) * (cardheight + yspace) <= mousey && mousey <= yblank + (1 + num % 2) * (cardheight + yspace) + cardheight) {//if choosed
 						return num;
@@ -381,4 +385,8 @@ Choose(){
 KOIKOI判定でクリック判定を画面中央を境になるように
 Add #ifdef _DEBUG in Draw() Cards Player1 holds
 in VSCPGameScene::Choose(),made return properly
+0223
+FieldBigger(),Change kasuhudaProc 
+Change unevitably discarding case algolrthm
+FilterCandidate(), modify designated card index
 */
