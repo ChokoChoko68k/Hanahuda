@@ -450,6 +450,7 @@ void GameScene::DeckDraw() {
 int GameScene::YakuHantei() {
 
 	unsigned int yaku = 0;
+	unsigned int yaku_reach = 0;
 
 	int nowscore = 0;
 
@@ -494,17 +495,38 @@ int GameScene::YakuHantei() {
 	}
 
 	//decision
+	if(kasu == 9){
+		yaku_reach += 0x0001;
+	}
 	if (kasu >= 10) {
 		nowscore += 1 + kasu - 10;
 		yaku += 0x0001;
+	}
+	if (tan == 4){
+		yaku_reach += 0x0002;
 	}
 	if (tan >= 5) {
 		nowscore += 1 + tan - 5;
 		yaku += 0x0002;
 	}
+	if (tane == 4) {
+		yaku_reach += 0x0004;
+	}
 	if (tane >= 5) {
 		nowscore += 1 + tane - 5;
 		yaku += 0x0004;
+	}
+	if (hikari == 2 && !is43) {//三光リーチ
+		yaku_reach += 0x0008;
+	}
+	if (hikari == 3) {//雨四光リーチ
+		yaku_reach += 0x0010;
+	}
+	if (hikari == 3) {//四光リーチ
+		yaku_reach += 0x0020;
+	}
+	if (hikari == 4) {//五光リーチ
+		yaku_reach += 0x0040;
 	}
 	if (hikari == 3 && !is43) {//三光
 		nowscore += 5;
@@ -525,20 +547,39 @@ int GameScene::YakuHantei() {
 		yaku += 0x0040;
 	}
 	
+	if (num_akatan == 2) {
+		yaku_reach += 0x0080;
+	}
 	if (num_akatan == 3) {
 		nowscore += 5 + tan - 3;//赤短
 		yaku += 0x0080;
 	}
+	if (num_aotan == 2) {
+		yaku_reach += 0x0100;
+	}
 	if (num_aotan == 3) {
 		nowscore += 5 + tan - 3;//青短
 		yaku += 0x0100;
+	}
+	if (num_inosikachou == 2) {
+		yaku_reach += 0x0200;
 	}
 	if (num_inosikachou == 3) {
 		nowscore += 5;//猪鹿蝶
 		yaku += 0x0200;
 	}
 	/*
+	if(is11 && !is25){
+			yaku_reach += 0x0400;
+	}
+	if(is31 && !is25){
+			yaku_reach += 0x0800;
+	}
 	if (is35) {
+		if(!is11 && !is31){//酒を持っているが桜も月も無い
+			yaku_reach += 0x0400;
+			yaku_reach += 0x0800;
+		}
 		if(is11){
 			nowscore += 3;//花見酒
 			yaku += 0x0400;
@@ -553,6 +594,8 @@ int GameScene::YakuHantei() {
 	player[teban].num_kasu = kasu;
 	player[teban].num_tan = tan;
 	player[teban].num_tane = tane;
+
+	player[teban].yaku_reach = yaku_reach;
 
 	//new or renew yaku
 	if (nowscore > player[teban].nowscore) {

@@ -21,13 +21,18 @@ void VSCPGameScene::Update() {
 	case Cellkind::KOIKOI:
 		if (teban == 1) {//CPU's turn
 			//こいこい
-			//しない
-
+			//相手がリーチでなく、かつ最後のターン以外する
+			if (player[0].yaku_reach == 0x0000 && player[1].index_hold.size() > 1) {
+				cellkind = Cellkind::NONE;
+				teban ^= 1;
+			}
 			//勝負
-			player[teban].score += player[teban].nowscore;
-			player[(teban + 1) % 2].score -= player[teban].nowscore;
-			SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
-			return;
+			else {
+				player[teban].score += player[teban].nowscore;
+				player[(teban + 1) % 2].score -= player[teban].nowscore;
+				SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
+				return;
+			}
 		}
 		else if (teban == 0) {//Player's turn
 			if (click_left == 1) {
@@ -178,6 +183,7 @@ void VSCPGameScene::Draw() {
 	default:
 		break;
 	}
+	DrawExtendFormatStringToHandle(200, 650, 1.0, 1.0, WHITE, fonthandle, "player[1].yaku=%x\n,player[1].yaku_reach=%x\n",player[1].yaku, player[1].yaku_reach);
 }
 
 //返り値は「そのカードの手札のなかで何番目に置いてあるか」。札のインデックスではない
@@ -227,7 +233,7 @@ std::vector<byte> VSCPGameScene::DiscardSameMonth(){
 	for (int i = 0; i < 8; i++) {//month_savedの何番目か
 		if (month_detected == month_saved[i]) {//月を順番に並べた手札で一つ前の札と月が同じ＝＝同じ月の札が複数ある//手札が一枚でも減ると-858993460(初期化だけした値)が入る
 			//場札の月と一致しているか
-			for (int j = 0; j < field.size(); j++) {
+			for (int j = 0; j < field.size(); j++) {//手札のカードを一枚でも出した後だと配列に-858993460が入り、これを参照することになってしまっている
 				if (card[field[j]].month == month_detected) {
 					//一致していればその月の手札を全部候補に
 					for (int k = 0; k < player[1].index_hold.size(); k++) {//kは手札の何番目か
@@ -389,4 +395,6 @@ in VSCPGameScene::Choose(),made return properly
 FieldBigger(),Change kasuhudaProc 
 Change unevitably discarding case algolrthm
 FilterCandidate(), modify designated card index
+0224
+yaku_reach
 */

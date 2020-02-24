@@ -42,6 +42,7 @@ protected:
 		int nowscore;//そのラウンドで取得し点：初期値０；「勝負」するまで持ち点に加えられない
 		//役判定用
 		unsigned int yaku;
+		unsigned int yaku_reach;//手役が完成したらyaku_reachからは消える//この仕様で迷った。
 		int num_kasu;
 		int num_tan;
 		int num_tane;
@@ -53,6 +54,7 @@ protected:
 			score = 20;
 			nowscore = 0;
 			yaku = 0; 
+			yaku_reach = 0;
 			num_kasu = 0;
 			num_tan = 0;
 			num_tane = 0;
