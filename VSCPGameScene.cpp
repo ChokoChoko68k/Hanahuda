@@ -113,15 +113,15 @@ void VSCPGameScene::Draw() {
 
 	//Draw Cards Player0 holds
 	for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
-		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace)+i* (cardwidth + xspace), yblank + (cardheight + yspace) * 3, card[player[0].index_hold[i]].graph, FALSE);
+		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 3, card[player[0].index_hold[i]].graph, FALSE);
 	}
 
 	//Draw Field Cards
 	for (int i = 0; i < (signed int)field.size(); i++) {
 		if (i < 10) {
-			DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 1 * (cardwidth + xspace) + (i / 2) * (cardwidth + xspace), yblank + (1/*if 0, same y coordinate as player1's hand*/ + i % 2) * (cardheight + yspace) , card[field[i]].graph, FALSE);
+			DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 1 * (cardwidth + xspace) + (i / 2) * (cardwidth + xspace), yblank + (1/*if 0, same y coordinate as player1's hand*/ + i % 2) * (cardheight + yspace), card[field[i]].graph, FALSE);
 		}
-		else if (i<=10 && i < 12) {
+		else if (i <= 10 && i < 12) {
 			DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 2 * (cardwidth + xspace) + (i / 2) * (cardwidth + xspace), yblank + (1 + i % 2) * (cardheight + yspace), card[field[i]].graph, FALSE);
 		}
 		else {
@@ -140,7 +140,7 @@ void VSCPGameScene::Draw() {
 
 	//Draw Every Player's gotten cards
 	for (int i = 0; i < (signed int)player[0].index_get.size(); i++) {
-		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ +(i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (2 + i / 8), card[player[0].index_get[i]].graph, FALSE);
+		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ + (i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (2 + i / 8), card[player[0].index_get[i]].graph, FALSE);
 	}
 	for (int i = 0; i < (signed int)player[1].index_get.size(); i++) {
 		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ + (i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (0 + i / 8), card[player[1].index_get[i]].graph, FALSE);
@@ -154,7 +154,7 @@ void VSCPGameScene::Draw() {
 	case GameScene::Cellkind::NONE:
 		break;
 	case GameScene::Cellkind::KOIKOI:
-		DrawBox(40, yblank + (cardheight + yspace)*1, 40+300, yblank + (cardheight + yspace) * 2+cardheight, BLACK, TRUE);//x座標は画面中央を基準に真ん中揃え
+		DrawBox(40, yblank + (cardheight + yspace) * 1, 40 + 300, yblank + (cardheight + yspace) * 2 + cardheight, BLACK, TRUE);//x座標は画面中央を基準に真ん中揃え
 		yaku = player[teban].yaku;
 
 		nowyakunum = 0;//現在できている役の数。描画の位置調整も兼ねる
@@ -183,7 +183,6 @@ void VSCPGameScene::Draw() {
 	default:
 		break;
 	}
-	DrawExtendFormatStringToHandle(200, 650, 1.0, 1.0, WHITE, fonthandle, "player[1].yaku=%x\n,player[1].yaku_reach=%x\n",player[1].yaku, player[1].yaku_reach);
 }
 
 //返り値は「そのカードの手札のなかで何番目に置いてあるか」。札のインデックスではない

@@ -11,13 +11,21 @@ TitleScene::~TitleScene() {
 
 void TitleScene::Update() {
 	if (click_left == 1) {
-		SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
+		if (mousex < SCREEN_WIDTH / 2) {
+			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
+			SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
+		}
+		else {
+			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
+			SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
+		}
 		return;
 	}
 }
 
 void TitleScene::Draw() {
 	DrawGraph(0, 0, graph_back, FALSE);
-	DrawFormatStringToHandle(500, 550, 0xff1111, fonthandle, "‘Îí");
-	DrawFormatStringToHandle(500, 600, 0xff1111, fonthandle,"‘Î“d”]‘Îí");
+	DrawFormatStringToHandle(SCREEN_WIDTH/2 - 100, 500, 0xff1111, fonthandle, "‘Îí");
+	DrawFormatStringToHandle(SCREEN_WIDTH/2 + 100, 500, 0xff1111, fonthandle,"‘Î“d”]‘Îí");
+	DrawFormatStringToHandle(SCREEN_WIDTH/2, 650, 0xff1111, fonthandle, "I—¹");
 }
