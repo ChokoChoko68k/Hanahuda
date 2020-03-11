@@ -1,0 +1,222 @@
+cd C:\
+
+cd Users
+cd taiei
+cd source
+cd repos
+cd Hanahuda
+
+クローン(勝手にフォルダが作られます。指定したい場所の一個上でやれ)
+git clone git@github.com:cck68k/Hanahuda.git
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (master)
+$ git clone git@github.com:cck68k/Hanahuda.git
+Cloning into 'Hanahuda'...
+The authenticity of host 'github.com (52.69.186.44)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com,52.69.186.44' (RSA) to the list of known hosts.
+Enter passphrase for key '/c/Users/taiei/.ssh/id_rsa':
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (master)
+$ git add *
+warning: adding embedded git repository: Hanahuda
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint:
+hint:   git submodule add <url> Hanahuda
+hint:
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint:
+hint:   git rm --cached Hanahuda
+hint:
+hint: See "git help submodule" for more information.
+
+
+
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (master)
+$ git push Hanahuda master:feature
+Enumerating objects: 104, done.
+Counting objects: 100% (104/104), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (102/102), done.
+Writing objects: 100% (104/104), 10.08 MiB | 2.90 MiB/s, done.
+Total 104 (delta 10), reused 0 (delta 0)
+remote: Resolving deltas: 100% (10/10), done.
+To Hanahuda
+ * [new branch]      master -> feature
+
+git push <reposname> <local>:<remote>
+
+
+
+≡commit:update
+≡branch:コミットを時系列にそって繋ぎ枝にしたもの。分岐もできる
+≡add(staging):ファイルをcommitの対象に入れること
+≡push:ローカルリポジトリの変更をリモートリポジトリに反映（押し付ける）こと
+≡origin:クローンした際に指定される、ローカルリポジトリから見たリモートリポジトリのこと
+
+
+
+graphicのファルダを削除してgit add *したらChanges not staged for commit:と表示され削除がstageされていないという警告が出た(delete graphic/1.png…が赤字でずらずらと並んでいた)
+→git add .にしたら緑字になりcommitもpushもうまくいった
+
+
+
+/graphicを完全に削除
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (topic)
+$ git filter-branch --tree-filter "rm -f -r /graphic/ " HEAD # 最後に/が必要
+WARNING: git-filter-branch has a glut of gotchas generating mangled history
+         rewrites.  Hit Ctrl-C before proceeding to abort, then use an
+         alternative filtering tool such as 'git filter-repo'
+         (https://github.com/newren/git-filter-repo/) instead.  See the
+         filter-branch manual page for more details; to squelch this warning,
+         set FILTER_BRANCH_SQUELCH_WARNING=1.
+Proceeding with filter-branch...
+
+Rewrite dc23b0f8a47d06a6b735b5096264d30c948a1d5e (1/17) (0 seconds passed, remaiRewrite eda347d4f0cb7477e0912cb9e7f4456f78931e18 (2/17) (1 seconds passed, remaiRewrite 73221e9049b0b081090471173cdb3d9bce10217d (2/17) (1 seconds passed, remaiRewrite 12edd40831ff3d78872c759b4a3f68a3d5bd876a (2/17) (1 seconds passed, remaiRewrite 43d200ef464869c7c645d36b8851b9077b45dcb7 (5/17) (4 seconds passed, remaiRewrite 2a62bf537e2e16fb7cf345bb1fe7821e49324775 (5/17) (4 seconds passed, remaiRewrite 2c8715efbf2133e959874f10311afcefbfb2a6bd (7/17) (6 seconds passed, remaiRewrite c4893ced4b341316b62ca7d0f304b2372c250323 (7/17) (6 seconds passed, remaiRewrite 7a37e5538c7e51bfbfd60263b75a36d554e7c20b (9/17) (7 seconds passed, remaiRewrite d714ea4322e392d4e374af18fa82ad455706e693 (9/17) (7 seconds passed, remaiRewrite 1cfa864941830b4e8ba92b919cb5dd04f0b0e186 (11/17) (9 seconds passed, remaRewrite cb2ba5abc6b524914af9d5baac26eaeb3d9aa532 (11/17) (9 seconds passed, remaRewrite b1818a2715f0609b1e42bea84b6978bc4720da51 (13/17) (11 seconds passed, remRewrite 59868a17d00dbb3732b16a38c2654c1198f44444 (13/17) (11 seconds passed, remRewrite 65b35ea661666f20559d2bbe3eb6b5f08f44646e (15/17) (13 seconds passed, remRewrite f0b01016e7db9d82523b82abb96fb6f92ee8bd18 (15/17) (13 seconds passed, remRewrite 4c229f97028853fbd72af4d9d23901f8556a674c (17/17) (15 seconds passed, remaining 0 predicted)
+Ref 'refs/heads/topic' was rewritten
+https://qiita.com/go_astrayer/items/6e39d3ab16ae8094496c
+うまくいった（githubから消えている）
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (topic)
+$ git push -f
+fatal: The current branch topic has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin topic
+
+？なんだかわからんが枝が上流を持ってないからだめらしい
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (topic)
+$ git push --set-upstream origin topic
+Enter passphrase for key '/c/Users/taiei/.ssh/id_rsa':
+To github.com:cck68k/Hanahuda.git
+ ! [rejected]        topic -> topic (non-fast-forward)
+error: failed to push some refs to 'git@github.com:cck68k/Hanahuda.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Integrate the remote changes (e.g.
+hint: 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+？？？？？？？？？？
+まあいいや先masterもやろう
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (master)
+$ git filter-branch --tree-filter "rm -f -r /graphic/ " HEAD
+WARNING: git-filter-branch has a glut of gotchas generating mangled history
+         rewrites.  Hit Ctrl-C before proceeding to abort, then use an
+         alternative filtering tool such as 'git filter-repo'
+         (https://github.com/newren/git-filter-repo/) instead.  See the
+         filter-branch manual page for more details; to squelch this warning,
+         set FILTER_BRANCH_SQUELCH_WARNING=1.
+Proceeding with filter-branch...
+
+Cannot create a new backup.
+A previous backup already exists in refs/original/
+Force overwriting the backup with -f
+すでに前のバックアップがあります？
+refs/originalって？
+
+https://qiita.com/kou_kikuta/items/090b8486bb6c1717833b
+upstreamとは
+各ローカルブランチに、リモート側として対応付いたブランチをupstreamブランチという。
+upstreamブランチにしかpushできない。push時に対応付けする。
+
+
+どうやら履歴が書き換わっていると普通にpushできないらしいので、強制push
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (topic)
+$  git push -f --set-upstream origin topic
+Enter passphrase for key '/c/Users/taiei/.ssh/id_rsa':
+Enumerating objects: 182, done.
+Counting objects: 100% (182/182), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (97/97), done.
+Writing objects: 100% (149/149), 58.68 MiB | 1.01 MiB/s, done.
+Total 149 (delta 59), reused 109 (delta 45)
+remote: Resolving deltas: 100% (59/59), completed with 9 local objects.
+remote: warning: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.
+remote: warning: See http://git.io/iEPt8g for more information.
+remote: warning: File .vs/Hanahuda/v16/ipch/AutoPCH/f259125b1d93737b/TITLESCENE.ipch is 54.75 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+remote: warning: File .vs/Hanahuda/v16/ipch/AutoPCH/6ddf3f0d28a8ae43/VSCPGAMESCENE.ipch is 70.69 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+remote: warning: File .vs/Hanahuda/v16/ipch/AutoPCH/cb22763db275b3dd/GAMESCENE.ipch is 70.69 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+remote: warning: File .vs/Hanahuda/v16/ipch/AutoPCH/d9bbfb40f772ffa3/SCENE.ipch is 70.69 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB
+To github.com:cck68k/Hanahuda.git
+ + 4c229f9...c7e0715 topic -> topic (forced update)
+Branch 'topic' set up to track remote branch 'topic' from 'origin'.
+できたがgithubを見るとtopic (less than a minute ago)とはなっているものの
+commitは数日前のもののまま。が！なぜかファイルの中身はちゃんと更新されている
+ここらへんの整合性をどうつけてんだ
+
+
+≡filter-branch "CODE":そのbranchの各コミットに対する一括作業を指定
+≡--tree-filter：""で指定した部分以外は全て行ったコミット作業と同じコミット作業を行うという指定
+≡HEAD:そのブランチの最新のコミット（を指すポインタ）
+
+
+
+git checkout masterで枝を移動すると、ローカルのファイルも勝手にいじられる。勝手にPCのファイルが書き換わります。
+
+
+
+https://qiita.com/crarrry/items/c5964512e21e383b73da
+
+
+
+最後にgit filter-branch -f --tree-filter "rm -f -r .vs/Hanahuda/v16"で-f付けて（付けろと警告出た）今日はおわり
+
+Before staging modified files, did "git checkout HEAD".
+But NO FILES CHANGED
+->git's commit also watches still-not-added files?
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda ((175ef57...))
+$ git commit
+[detached HEAD abec15f] Click Position Change according to UIchange
+ 13 files changed, 222 insertions(+), 48 deletions(-)
+ create mode 100644 for git bash.txt
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda ((abec15f...))
+$ git status
+HEAD detached from 175ef57
+nothing to commit, working tree clean
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda ((abec15f...))
+$ git push
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push origin HEAD:<name-of-remote-branch>
+
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda ((abec15f...))
+$ git checkout master
+Unlink of file 'for git bash.txt' failed. Should I try again? (y/n) n
+warning: unable to unlink 'for git bash.txt': Invalid argument
+Updating files: 100% (13/13), done.
+Warning: you are leaving 1 commit behind, not connected to
+any of your branches:
+
+  abec15f Click Position Change according to UIchange
+
+If you want to keep it by creating a new branch, this may be a good time
+to do so with:
+
+ git branch <new-branch-name> abec15f
+
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+
+taiei@PCtaiei MINGW64 ~/source/repos/Hanahuda (master)
+$ git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        for git bash.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+I was not in any branch???
