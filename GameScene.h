@@ -110,7 +110,7 @@ public:
 	};
 	virtual ~GameScene() {};
 
-	virtual void Update();
+	virtual int Update();
 	virtual void Draw();
 
 };

@@ -15,7 +15,7 @@ public:
 	virtual ~VSCPGameScene() {};
 
 	//for Overide
-	void Update();
+	int Update();
 	void Draw();
 	int Select();
 	int Choose();

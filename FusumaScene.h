@@ -15,6 +15,6 @@ public:
 	FusumaScene();
 	~FusumaScene();
 
-	void Update();
+	int Update();
 	void Draw();
 };

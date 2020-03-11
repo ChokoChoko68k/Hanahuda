@@ -25,7 +25,7 @@ ResultScene::ResultScene(int _gamenum, int _teban, int _score_player0, int _scor
 ResultScene::~ResultScene() {
 };
 
-void ResultScene::Update() {
+int ResultScene::Update() {
 
 	leftx_limit = count;
 	rightx_limit = SCREEN_WIDTH - count;
@@ -54,8 +54,9 @@ void ResultScene::Update() {
 	//‚Ó‚·‚Ü‘S•”ŠJ‚¢‚½
 	if (!isclosing && count == 0) {
 		SceneManager::GetInstance()->DeleteScene(SceneLayer::UPPER);
-		return;
+		return 0;
 	}
+	return 0;
 }
 
 void ResultScene::Draw() {

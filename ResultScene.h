@@ -21,6 +21,6 @@ public:
 	ResultScene(int _gamenum, int _teban, int _score_player0, int _score_player1);
 	~ResultScene();
 
-	void Update();
+	int Update();
 	void Draw();
 };
