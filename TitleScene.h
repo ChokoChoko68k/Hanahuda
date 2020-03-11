@@ -7,6 +7,6 @@ private:
 public:
 	TitleScene();
 	~TitleScene();
-	void Update();
+	int Update();
 	void Draw();
 };

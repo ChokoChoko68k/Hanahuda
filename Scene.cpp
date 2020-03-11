@@ -10,12 +10,13 @@ SceneManager* SceneManager::pointer_instance;
 
 int SceneManager::Update() {
 
-	if (upperscene != nullptr)upperscene->Update();
+	int result = 0;
+	if (upperscene != nullptr)result = upperscene->Update();
 	else if (downerscene != nullptr)downerscene->Update();
 
 	if (upperscene == nullptr && downerscene == nullptr)return -1;
 
-	return 0;
+	return result;
 };
 
 void SceneManager::Draw() {

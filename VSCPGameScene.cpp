@@ -2,7 +2,7 @@
 #include"VSCPGameScene.h"
 
 //Overriding GameScene
-void VSCPGameScene::Update() {
+int VSCPGameScene::Update() {
 	//セル表示処理
 	//手札選択Select()
 	////捨て札と場札を合わせる処理Trash()
@@ -10,7 +10,7 @@ void VSCPGameScene::Update() {
 	//終了処理
 
 	//描画演出中は更新しない
-	if (isdrawing)return;
+	if (isdrawing)return 0;
 
 	//こいこいしますか？もしくはどの札を選択しますか？という表示が出ている
 	int fieldplace_choosed = -1;//switch~case文内だとLocal変数の初期化がされないのでここに；ONLY"case MULTICHOICE"
@@ -31,7 +31,7 @@ void VSCPGameScene::Update() {
 				player[teban].score += player[teban].nowscore;
 				player[(teban + 1) % 2].score -= player[teban].nowscore;
 				SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
-				return;
+				return 0;
 			}
 		}
 		else if (teban == 0) {//Player's turn
@@ -46,11 +46,11 @@ void VSCPGameScene::Update() {
 					player[teban].score += player[teban].nowscore;
 					player[(teban + 1) % 2].score -= player[teban].nowscore;
 					SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
-					return;
+					return 0;
 				}
 			}
 		}
-		return;//表示が出ている間は手札選択にいけない
+		return 0;//表示が出ている間は手札選択にいけない
 	case Cellkind::MULTICHOICE:
 		fieldplace_choosed = Choose();
 
@@ -72,13 +72,13 @@ void VSCPGameScene::Update() {
 
 			if (YakuHantei() != 0) {
 				cellkind = Cellkind::KOIKOI;
-				return;
+				return 0;
 			}
 
 			teban ^= 1;
 			cellkind = Cellkind::NONE;
 		}
-		return;//表示が出ている間は手札選択にいけない
+		return 0;//表示が出ている間は手札選択にいけない
 	default:
 		break;
 	}
@@ -88,13 +88,13 @@ void VSCPGameScene::Update() {
 
 	if (holdplace_selected != -1) {
 
-		if (Trash(holdplace_selected) != 0)return;//エラーが出たり複数選択になったらもう１ループする
+		if (Trash(holdplace_selected) != 0)return 0;//エラーが出たり複数選択になったらもう１ループする
 
 		DeckDraw();
 
 		if (YakuHantei() != 0) {
 			cellkind = Cellkind::KOIKOI;
-			return;
+			return 0;
 		}
 
 		teban ^= 1;
@@ -103,8 +103,9 @@ void VSCPGameScene::Update() {
 	//役なしで終了
 	if ((player[0].index_hold).size() == 0 && (player[1].index_hold).size() == 0) {
 		SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
-		return;
+		return 0;
 	}
+	return 0;
 }
 
 void VSCPGameScene::Draw() {

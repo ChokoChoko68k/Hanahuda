@@ -80,7 +80,7 @@ void GameScene::Init(int _gamenum, int _teban, int _score_player0, int _score_pl
 	cellkind = Cellkind::NONE;
 }
 
-void GameScene::Update() {
+int GameScene::Update() {
 	//セル表示処理
 	//手札選択Select()
 	////捨て札と場札を合わせる処理Trash()
@@ -88,7 +88,7 @@ void GameScene::Update() {
 	//終了処理
 
 	//描画演出中は更新しない
-	if (isdrawing)return;
+	if (isdrawing)return 0;
 
 	//こいこいしますか？もしくはどの札を選択しますか？という表示が出ている
 	int fieldplace_choosed = -1;//switch~case文内だとLocal変数の初期化がされないのでここに；ONLY"case MULTICHOICE"
@@ -108,10 +108,10 @@ void GameScene::Update() {
 				player[teban].score += player[teban].nowscore;
 				player[(teban + 1) % 2].score -= player[teban].nowscore;
 				SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
-				return;
+				return 0;
 			}
 		}
-		return;//表示が出ている間は手札選択にいけない
+		return 0;//表示が出ている間は手札選択にいけない
 	case Cellkind::MULTICHOICE:
 		fieldplace_choosed = Choose();
 
@@ -133,13 +133,13 @@ void GameScene::Update() {
 
 			if (YakuHantei() != 0) {
 				cellkind = Cellkind::KOIKOI;
-				return;
+				return 0;
 			}
 
 			teban ^= 1;
 			cellkind = Cellkind::NONE;
 		}
-		return;//表示が出ている間は手札選択にいけない
+		return 0;//表示が出ている間は手札選択にいけない
 	default:
 		break;
 	}
@@ -149,13 +149,13 @@ void GameScene::Update() {
 
 	if (holdplace_selected != -1) {
 
-		if (Trash(holdplace_selected) != 0)return;//エラーが出たり複数選択になったらもう１ループする
+		if (Trash(holdplace_selected) != 0)return 0;//エラーが出たり複数選択になったらもう１ループする
 
 		DeckDraw();
 
 		if (YakuHantei() != 0) {
 			cellkind = Cellkind::KOIKOI;
-			return;
+			return 0;
 		}
 
 		teban ^= 1;
@@ -164,8 +164,9 @@ void GameScene::Update() {
 	//役なしで終了
 	if ((player[0].index_hold).size() == 0 && (player[1].index_hold).size() == 0) {
 		SceneManager::GetInstance()->CreateScene(SceneID::RESULT, SceneLayer::UPPER, gamenum, teban, player[0].score, player[1].score);
-		return;
+		return 0;
 	}
+	return 0;
 }
 
 void GameScene::Draw() {
@@ -336,26 +337,21 @@ void GameScene::Deal() {
 
 //返り値は「そのカードの手札のなかで何番目に置いてあるか」。札のインデックスではない
 int GameScene::Select() {
-	if (click_left == 1) {
-		if (teban == 0) {//player 0's turn
-			if (mousex < xblank + (cardwidth + xspace) * 2) {//if mousecursor is in player1 area
+	if (click_left == 1) {//player 0's turn
+		if (teban == 0) {
+			if (yblank + (cardheight + yspace) * 3 <= mousey && mousey <= yblank + (cardheight + yspace) * 3 + cardheight) {//if mousecursor is near player0 area
 				for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
-					if (mousex >= xblank + (cardwidth + xspace) * (i % 2) && mousex < xblank + (cardwidth + xspace) * (i % 2) + cardwidth) {
-						if (mousey >= yblank + (cardheight + yspace) * (i / 2) && mousey < yblank + (cardheight + yspace) * (i / 2) + cardheight) {
-							return i;
-						}
+					if (SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) <= mousex && mousex <= SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) + cardwidth) {
+						return i;
 					}
-
 				}
 			}
 		}
 		else if (teban == 1) {//player 1's turn
-			if (mousex > 500 + xblank) {//if mousecursor is in player1 area
+			if (yblank + (cardheight + yspace) * 0 <= mousey && mousey <= yblank + (cardheight + yspace) * 0 + cardheight) {//if mousecursor is near player1 area
 				for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {
-					if (mousex >= 500 + xblank + (cardwidth + xspace) * (i % 2) && mousex < 500 + xblank + (cardwidth + xspace) * (i % 2) + cardwidth) {
-						if (mousey >= yblank + (cardheight + yspace) * (i / 2) && mousey < yblank + (cardheight + yspace) * (i / 2) + cardheight) {
-							return i;
-						}
+					if (SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) <= mousex && mousex <= SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) + cardwidth) {
+						return i;
 					}
 				}
 			}

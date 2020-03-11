@@ -15,7 +15,7 @@ FusumaScene::FusumaScene() {
 FusumaScene::~FusumaScene() {
 };
 
-void FusumaScene::Update() {
+int FusumaScene::Update() {
 
 	leftx_limit = count;
 	rightx_limit = SCREEN_WIDTH - count;
@@ -40,8 +40,9 @@ void FusumaScene::Update() {
 	//‚Ó‚·‚Ü‘S•”ŠJ‚¢‚½
 	if (!isclosing && count == 0) {
 		SceneManager::GetInstance()->DeleteScene(SceneLayer::UPPER);
-		return;
+		return 0;
 	}
+	return 0;
 }
 
 void FusumaScene::Draw() {
