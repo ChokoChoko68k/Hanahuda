@@ -11,7 +11,7 @@ TitleScene::~TitleScene() {
 
 int TitleScene::Update() {
 	if (click_left == 1) {
-		if (mousex > SCREEN_WIDTH / 2 - 25 && mousex < SCREEN_WIDTH / 2 + 25 && mousey>650 && mousey < 650 + 30) {
+		if (mousex > SCREEN_WIDTH / 2 - 25 && mousex < SCREEN_WIDTH / 2 + 25 && mousey>650 && mousey < 650 + 30) {//End the game
 			return -1;
 		}
 		else if (mousex < SCREEN_WIDTH / 2) {
@@ -22,8 +22,8 @@ int TitleScene::Update() {
 			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
 			SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
 		}
-		return 0;
 	}
+	return 0;
 }
 
 void TitleScene::Draw() {
