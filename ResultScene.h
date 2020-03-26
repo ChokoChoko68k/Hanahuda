@@ -4,6 +4,9 @@
 
 class ResultScene : public Scene{
 private:
+	int graph_fusuma_left;
+	int graph_fusuma_right;
+
 	int count;
 	int leftx_limit;
 	int rightx_limit;

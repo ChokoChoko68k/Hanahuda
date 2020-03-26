@@ -10,6 +10,9 @@ FusumaScene::FusumaScene() {
 	isclosing = true;
 
 	waitcount = 0;
+
+	graph_fusuma_left = LoadGraph("graphic/Fusuma_left.jpg");
+	graph_fusuma_right = LoadGraph("graphic/Fusuma_right.jpg");
 };
 
 FusumaScene::~FusumaScene() {
@@ -46,6 +49,6 @@ int FusumaScene::Update() {
 }
 
 void FusumaScene::Draw() {
-	DrawBox(0, 0, leftx_limit, SCREEN_HEIGHT, WHITE, TRUE);
-	DrawBox(SCREEN_WIDTH, 0, rightx_limit, SCREEN_HEIGHT, WHITE, TRUE);
+	DrawGraph(-SCREEN_WIDTH/2+leftx_limit, 0, graph_fusuma_left, FALSE);
+	DrawGraph(rightx_limit, 0, graph_fusuma_right, FALSE);
 }

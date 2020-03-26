@@ -3,6 +3,9 @@
 #include"Choko.h"
 
 ResultScene::ResultScene(int _gamenum, int _teban, int _score_player0, int _score_player1) {
+	graph_fusuma_left = LoadGraph("graphic/Fusuma_left.jpg");
+	graph_fusuma_right = LoadGraph("graphic/Fusuma_right.jpg");
+
 	count = 0;
 	leftx_limit = 0;
 	rightx_limit = SCREEN_WIDTH;
@@ -60,8 +63,8 @@ int ResultScene::Update() {
 }
 
 void ResultScene::Draw() {
-	DrawBox(0, 0, leftx_limit, SCREEN_HEIGHT, BLACK, TRUE);
-	DrawBox(SCREEN_WIDTH, 0, rightx_limit, SCREEN_HEIGHT, BLACK, TRUE);
+	DrawGraph(-SCREEN_WIDTH / 2 + leftx_limit, 0, graph_fusuma_left, FALSE);
+	DrawGraph(rightx_limit, 0, graph_fusuma_right, FALSE);
 	if (count == SCREEN_WIDTH / 2) {
 		DrawExtendFormatString(SCREEN_WIDTH / 2 - 200, 100, 1.0, 1.0, WHITE, "%d回戦　%d：%d点　%d：%d点", gamenum, 0, score_player0, 1, score_player1);
 		if (winner != -1)DrawExtendFormatString(SCREEN_WIDTH / 2 -200, 200, 1.0, 1.0, 0x5af59, "%dの勝ち", winner);
