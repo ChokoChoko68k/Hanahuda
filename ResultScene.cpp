@@ -19,7 +19,7 @@ ResultScene::ResultScene(int _gamenum, int _teban, int _score_player0, int _scor
 
 	winner = -1;
 	//6回戦or延長戦終了か？
-	if (gamenum >= 6 && score_player0 != score_player1) {//now,2-win-game for debugging
+	if (gamenum >= 1 && score_player0 != score_player1) {//now,2-win-game for debugging
 		if (score_player0 > score_player1)winner = 0;
 		if (score_player0 < score_player1)winner = 1;
 	}
@@ -66,8 +66,10 @@ void ResultScene::Draw() {
 	DrawGraph(-SCREEN_WIDTH / 2 + leftx_limit, 0, graph_fusuma_left, FALSE);
 	DrawGraph(rightx_limit, 0, graph_fusuma_right, FALSE);
 	if (count == SCREEN_WIDTH / 2) {
-		DrawExtendFormatString(SCREEN_WIDTH / 2 - 200, 100, 1.0, 1.0, WHITE, "%d回戦　%d：%d点　%d：%d点", gamenum, 0, score_player0, 1, score_player1);
-		if (winner != -1)DrawExtendFormatString(SCREEN_WIDTH / 2 -200, 200, 1.0, 1.0, 0x5af59, "%dの勝ち", winner);
+		DrawExtendFormatString(SCREEN_WIDTH / 2 - 180, 180, 2.0, 2.0, KINAKAJIS, "%d回戦", gamenum);
+		DrawExtendFormatString(SCREEN_WIDTH / 2 - 180, 230, 2.0, 2.0, KINAKAJIS, "%s：    %d点", "競技者１", score_player0);
+		DrawExtendFormatString(SCREEN_WIDTH / 2 - 180, 280, 2.0, 2.0, KINAKAJIS, "%s：    %d点", "競技者２", score_player1);
+		if (winner != -1)DrawExtendFormatString(SCREEN_WIDTH / 2 - 180, 420, 3.0, 3.0, KINAKAJIS, "%dの勝ち", winner);
 	}
 }
 
