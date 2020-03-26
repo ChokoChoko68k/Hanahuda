@@ -99,7 +99,7 @@ protected:
 	virtual bool IsDealOK();//fieldに渡す８枚のうち同じ月が３枚以上になっていたらリセットする
 	virtual void Deal();//配る
 	virtual int Select();//手札から場に出す札を選択
-	virtual int Trash(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
+	virtual int TrashorGet(int _cardindex);//手札から場に捨てる：todo;場に同じ月のものが複数あった場合：出来たが書き方がヒドイ
 	virtual int Choose();//場に同じ月のものが複数あった場合の、場札選択
 	virtual void DeckDraw();
 	virtual int YakuHantei();//役が出来たり、役の更新があったときに0以外を返す

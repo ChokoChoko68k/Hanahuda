@@ -83,7 +83,7 @@ void GameScene::Init(int _gamenum, int _teban, int _score_player0, int _score_pl
 int GameScene::Update() {
 	//セル表示処理
 	//手札選択Select()
-	////捨て札と場札を合わせる処理Trash()
+	////捨て札と場札を合わせる処理TrashorGet()
 	////山札から引いて場札を合わせる処理DecktoField()
 	//終了処理
 
@@ -116,7 +116,6 @@ int GameScene::Update() {
 		fieldplace_choosed = Choose();
 
 		if (fieldplace_choosed != -1) {
-			//Trash関数からコピペ
 			//Get the card that player selected
 			player[teban].index_get.push_back(player[teban].index_hold[holdplace_selected]);//本当はここにholdplace_selectedつまりプレイヤーが選んでおいたインデックスが入らなければならない。しかしこいこい判定直後１ループするせいでSelect()により-1が入る
 			std::vector<byte>::iterator itr_temp1 = player[teban].index_hold.begin();
@@ -149,7 +148,7 @@ int GameScene::Update() {
 
 	if (holdplace_selected != -1) {
 
-		if (Trash(holdplace_selected) != 0)return 0;//エラーが出たり複数選択になったらもう１ループする
+		if (TrashorGet(holdplace_selected) != 0)return 0;//エラーが出たり複数選択になったらもう１ループする
 
 		DeckDraw();
 
@@ -268,7 +267,7 @@ int GameScene::CardDataLoad() {
 			}
 			if (chardata[i] == EOF)goto EXFILE;
 		}
-		//それを整数型or浮動小数点型に変換しenemydataに入れる
+		//それを整数型or浮動小数点型に変換しchardataに入れる
 		switch (ordernum) {
 		case 0:	card[datanum].month = atoiDx(chardata); break;
 		case 1:	card[datanum].kind = atoiDx(chardata); break;
@@ -368,20 +367,19 @@ int GameScene::Select() {
 }
 
 //プレイヤーが選んだ札に対する処理全般
-int GameScene::Trash(int index) {
-
-	//samemonthcardには、その札がfieldで何番目なのかが入る
-	samemonthcard.clear();
+int GameScene::TrashorGet(int index) {
 
 	//場札を走査して、月が一致する札が何枚あるか確認
+	//samemonthcardには、その札がfieldで何番目なのかが入る
+	samemonthcard.clear();
 	for (unsigned int i = 0; i < field.size(); i++) {
 		if (card[player[teban].index_hold[index]].month == card[field[i]].month) {//月一致
 			samemonthcard.push_back(i);
 		}
 	}
-	
-	if (samemonthcard.size() == 0) {
-		//deck to field
+
+	if (samemonthcard.size() == 0) {//Trash
+		//player to field
 		field.push_back(player[teban].index_hold[index]);//
 		std::vector<byte>::iterator itr_temp3 = player[teban].index_hold.begin();
 		itr_temp3 += index;
@@ -389,7 +387,7 @@ int GameScene::Trash(int index) {
 
 		return 0;
 	}
-	else if (samemonthcard.size() == 1) {
+	else if (samemonthcard.size() == 1) {//Get
 		//Get the card that player selected
 		player[teban].index_get.push_back(player[teban].index_hold[index]);
 		std::vector<byte>::iterator itr_temp1 = player[teban].index_hold.begin();

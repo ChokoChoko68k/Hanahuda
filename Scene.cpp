@@ -10,13 +10,25 @@ SceneManager* SceneManager::pointer_instance;
 
 int SceneManager::Update() {
 
-	int result = 0;
-	if (upperscene != nullptr)result = upperscene->Update();
-	else if (downerscene != nullptr)downerscene->Update();
+	int result_upper = -1;
+	int result_downer = -1;
 
+	//Scene Update
+	/*try {
+
+	}
+	catch(){
+
+	}*/
+	if (upperscene != nullptr)result_upper = upperscene->Update();
+	else if (downerscene != nullptr)result_downer = downerscene->Update();
+
+	//Null Pointer Error
 	if (upperscene == nullptr && downerscene == nullptr)return -1;
 
-	return result;
+	//Check Update Result
+	if (result_upper != 0 && result_downer != 0)return -1;
+	else return 0;
 };
 
 void SceneManager::Draw() {

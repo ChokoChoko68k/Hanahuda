@@ -88,7 +88,7 @@ int VSCPGameScene::Update() {
 
 	if (holdplace_selected != -1) {
 
-		if (Trash(holdplace_selected) != 0)return 0;//エラーが出たり複数選択になったらもう１ループする
+		if (TrashorGet(holdplace_selected) != 0)return 0;//エラーが出たり複数選択になったらもう１ループする
 
 		DeckDraw();
 

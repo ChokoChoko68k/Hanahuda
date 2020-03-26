@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CCKException.h" />
     <ClInclude Include="Choko.h" />
     <ClInclude Include="FusumaScene.h" />
     <ClInclude Include="GameScene.h" />
