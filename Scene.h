@@ -10,8 +10,6 @@ private:
 	//コピー禁止
 	Scene(const Scene& other);//コピコン;仮引数にとったりしてもprivateなので呼べない
 	Scene& operator=(const Scene& other);//代入演算子オーバーロード;代入してもprivateなので呼べない//なぜintellisenseが警告を？？
-	Scene(const Scene&& other);//コピコン;仮引数にとったりしてもprivateなので呼べない
-	Scene& operator=(const Scene&& other);//代入演算子オーバーロード;代入してもprivateなので呼べない//なぜintellisenseが警告を？？
 
 public:
 	Scene() {};
@@ -25,29 +23,29 @@ public:
 //シーン間で情報を受け渡すには、一旦SceneManagerのAcrossSceneDataに保存したのち、CreateScene関数に渡す。渡さない場合、CreateScene関数にはデフォルト引数が
 class SceneManager {
 private:
-	//コンストラクタをprivateに;コピー禁止
-	SceneManager(const SceneManager& other);
-	SceneManager& operator=(const SceneManager& other);
-
+	//コンストラクタをprivateに
 	SceneManager() {
 		downerscene = nullptr;
 		upperscene = nullptr;
 
+		isvscp = false;
 		gamenum = 0;
 		teban = 0;
 		score_player0 = 20;
 		score_player1 = 20;
-		isvscp = false;
-	};
+	}
+	//inhibit copying
+	SceneManager(const SceneManager& other);
+	SceneManager& operator=(const SceneManager& other);
+
 	static SceneManager* pointer_instance;
 
 	//Across Scene Data
+	bool isvscp;//リザルト画面から帰ってきたあとGameSceneを作るのかVSCPGameSceneを作るのか保存しておくため
 	int gamenum;
 	int teban;
 	int score_player0;
 	int score_player1;
-	bool isvscp;//リザルト画面から帰ってきたあとGameSceneを作るのかVSCPGameSceneを作るのか保存しておくため
-	//int nextsceneid;
 
 public:
 	static void CreateInstance() {//特定のオブジェクトを基準とする相対的な参照・・・じゃなくなる
@@ -69,17 +67,17 @@ private:
 	Scene* downerscene;
 	Scene* upperscene;
 
-	//bool isskipdownerscene;
 public:
 	int Update();
 
 	void Draw();
 
-	//void ChangeSkipFlag(bool _isskipdownerscene) { isskipdownerscene = _isskipdownerscene; }
-
 	void CreateScene(SceneID _sceneid, SceneLayer _layer, int _gamenum = 0, int _teban = 0 , int _score_player0 = 20, int _score_player1 = 20);
 
 	void DeleteScene(SceneLayer _layer);
+
+	void SetIsvscp(bool flag) { isvscp = flag; };
+	bool GetIsvscp() { return isvscp; }
 };
 
 

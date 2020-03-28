@@ -15,12 +15,12 @@ int TitleScene::Update() {
 			return -1;
 		}
 		else if (mousex < SCREEN_WIDTH / 2) {
+			SceneManager::GetInstance()->SetIsvscp(false);
 			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
-			//SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
 		}
 		else {
+			SceneManager::GetInstance()->SetIsvscp(true);
 			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
-			//SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
 		}
 	}
 	return 0;

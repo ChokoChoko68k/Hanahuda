@@ -25,7 +25,7 @@ int FusumaScene::Update() {
 
 	if (count == SCREEN_WIDTH / 2) {
 		if (waitcount == 48) {
-			if (SceneManager::GetInstance()->isvscp)SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
+			if (SceneManager::GetInstance()->GetIsvscp())SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
 			else SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
 			
 			isclosing = false;
