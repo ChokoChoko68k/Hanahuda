@@ -174,8 +174,14 @@ void GameScene::Draw() {
 
 	//Draw Cards Player0 holds  //if not their turn, turned down them
 	for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
-		if(teban == 0)DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 3, card[player[0].index_hold[i]].graph, FALSE);
-		else DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 3, graph_ura, FALSE);
+#ifdef _DEBUG
+		DrawGraph(xblank + (cardwidth + xspace) * (i % 2), yblank + (cardheight + yspace) * (i / 2), card[player[0].index_hold[i]].graph, FALSE);
+#else
+		if (teban == 0)
+			DrawGraph(xblank + (cardwidth + xspace) * (i % 2), yblank + (cardheight + yspace) * (i / 2), card[player[0].index_hold[i]].graph, FALSE);
+		else 
+			DrawGraph(xblank + (cardwidth + xspace) * (i % 2), yblank + (cardheight + yspace) * (i / 2), graph_ura, FALSE);
+#endif
 	}
 
 	//Draw Field Cards
@@ -194,19 +200,21 @@ void GameScene::Draw() {
 	//Draw Cards Player1 holds
 	for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {
 #ifdef _DEBUG
-		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 0, card[player[1].index_hold[i]].graph, FALSE);
+		DrawGraph(xblank + (cardwidth + xspace) * (i % 2 + 8), yblank + (cardheight + yspace) * (i / 2), card[player[1].index_hold[i]].graph, FALSE);
 #else
-		if(teban == 1)DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 0, card[player[1].index_hold[i]].graph, FALSE);//if not their turn, turned down them
-		else DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace), yblank + (cardheight + yspace) * 0, graph_ura, FALSE);
+		if (teban == 1)
+			DrawGraph(xblank + (cardwidth + xspace) * (i % 2 + 8), yblank + (cardheight + yspace) * (i / 2), card[player[1].index_hold[i]].graph, FALSE);
+		else
+			DrawGraph(xblank + (cardwidth + xspace) * (i % 2 + 8), yblank + (cardheight + yspace) * (i / 2), graph_ura, FALSE);
 #endif
 	}
 
 	//Draw Every Player's gotten cards
 	for (int i = 0; i < (signed int)player[0].index_get.size(); i++) {
-		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ + (i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (2 + i / 8), card[player[0].index_get[i]].graph, FALSE);
+		DrawGraph(xblank + (cardwidth + xspace) * 2 + i * cardwidth / 3, yblank + (cardheight + yspace) * 0, card[player[0].index_get[i]].graph, FALSE);
 	}
 	for (int i = 0; i < (signed int)player[1].index_get.size(); i++) {
-		DrawGraph(SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + 6 * (cardwidth + xspace) + cardwidth / 2/*The place semi-rightmost card existed +half of cardwidth*/ + (i % 8) * cardwidth / 3, yblank + (cardheight + yspace) * (1 - i / 8), card[player[1].index_get[i]].graph, FALSE);
+		DrawGraph(xblank + (cardwidth + xspace) * 7 - i * cardwidth / 3, yblank + (cardheight + yspace) * 3, card[player[1].index_get[i]].graph, FALSE);
 	}
 
 	//Draw Cell
@@ -344,18 +352,24 @@ void GameScene::Deal() {
 int GameScene::Select() {
 	if (click_left == 1) {//player 0's turn
 		if (teban == 0) {
-			if (yblank + (cardheight + yspace) * 3 <= mousey && mousey <= yblank + (cardheight + yspace) * 3 + cardheight) {//if mousecursor is near player0 area
+			if (mousex<= xblank + (cardwidth + xspace) * 1 + cardheight) {//if mousecursor is near player0 area
 				for (int i = 0; i < (signed int)player[0].index_hold.size(); i++) {
-					if (SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) <= mousex && mousex <= SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) + cardwidth) {
+					if (mousex>= xblank + (cardwidth + xspace) * (i % 2)
+						&& mousex < xblank + (cardwidth + xspace) * (i % 2) +cardwidth
+						&& mousey>= yblank +(cardheight + yspace)*(i/2)
+						&& mousey < yblank + (cardheight + yspace) * (i / 2) +cardheight) {
 						return i;
 					}
 				}
 			}
 		}
 		else if (teban == 1) {//player 1's turn
-			if (yblank + (cardheight + yspace) * 0 <= mousey && mousey <= yblank + (cardheight + yspace) * 0 + cardheight) {//if mousecursor is near player1 area
+			if (mousex>= xblank + (cardwidth + xspace) * 8) {//if mousecursor is near player1 area
 				for (int i = 0; i < (signed int)player[1].index_hold.size(); i++) {
-					if (SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) <= mousex && mousex <= SCREEN_WIDTH / 2 - xspace / 2 - cardwidth - 3 * (cardwidth + xspace) + i * (cardwidth + xspace) + cardwidth) {
+					if (mousex >= xblank + (cardwidth + xspace) * (i % 2 + 8)
+						&& mousex < xblank + (cardwidth + xspace) * (i % 2 + 8) + cardwidth
+						&& mousey >= yblank + (cardheight + yspace) * (i / 2)
+						&& mousey < yblank + (cardheight + yspace) * (i / 2) + cardheight) {
 						return i;
 					}
 				}
@@ -501,7 +515,7 @@ int GameScene::YakuHantei() {
 
 		if (index == 23)num_inosikachou++;
 		if (index == 27)num_inosikachou++;
-		if (index == 35)num_inosikachou++;
+		if (index == 39)num_inosikachou++;
 	}
 
 	//decision
