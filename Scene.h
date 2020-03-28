@@ -25,13 +25,10 @@ public:
 //シーン間で情報を受け渡すには、一旦SceneManagerのAcrossSceneDataに保存したのち、CreateScene関数に渡す。渡さない場合、CreateScene関数にはデフォルト引数が
 class SceneManager {
 private:
-	//コピー禁止
+	//コンストラクタをprivateに;コピー禁止
 	SceneManager(const SceneManager& other);
 	SceneManager& operator=(const SceneManager& other);
-	SceneManager(const SceneManager&& other);
-	SceneManager& operator=(const SceneManager&& other);
 
-	//コンストラクタをprivateに
 	SceneManager() {
 		downerscene = nullptr;
 		upperscene = nullptr;
@@ -49,6 +46,7 @@ private:
 	int teban;
 	int score_player0;
 	int score_player1;
+	bool isvscp;//リザルト画面から帰ってきたあとGameSceneを作るのかVSCPGameSceneを作るのか保存しておくため
 	//int nextsceneid;
 
 public:
@@ -82,8 +80,6 @@ public:
 	void CreateScene(SceneID _sceneid, SceneLayer _layer, int _gamenum = 0, int _teban = 0 , int _score_player0 = 20, int _score_player1 = 20);
 
 	void DeleteScene(SceneLayer _layer);
-
-	bool isvscp;//リザルト画面から帰ってきたあとGameSceneを作るのかVSCPGameSceneを作るのか保存しておくため
 };
 
 

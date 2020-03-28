@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="CCKException.h" />
     <ClInclude Include="Choko.h" />
     <ClInclude Include="FusumaScene.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="VSCPGameScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Choko.cpp" />
     <ClCompile Include="FusumaScene.cpp" />
     <ClCompile Include="GameScene.cpp" />

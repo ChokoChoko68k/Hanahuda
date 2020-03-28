@@ -16,11 +16,11 @@ int TitleScene::Update() {
 		}
 		else if (mousex < SCREEN_WIDTH / 2) {
 			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
-			SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
+			//SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
 		}
 		else {
 			SceneManager::GetInstance()->CreateScene(SceneID::FUSUMA, SceneLayer::UPPER);
-			SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
+			//SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
 		}
 	}
 	return 0;

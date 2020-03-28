@@ -25,8 +25,9 @@ int FusumaScene::Update() {
 
 	if (count == SCREEN_WIDTH / 2) {
 		if (waitcount == 48) {
-			//SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
-			SceneManager::GetInstance()->isvscp = true;
+			if (SceneManager::GetInstance()->isvscp)SceneManager::GetInstance()->CreateScene(SceneID::VSCPGAME, SceneLayer::DOWNER);
+			else SceneManager::GetInstance()->CreateScene(SceneID::GAME, SceneLayer::DOWNER);
+			
 			isclosing = false;
 		}
 		waitcount++;
@@ -36,7 +37,7 @@ int FusumaScene::Update() {
 		if (isclosing)count += 16;//shutterring speed
 	}
 	if (count <= SCREEN_WIDTH / 2) {
-		if (!isclosing)count -= 16;//shutterring speed
+		if (!isclosing)count -= 16;//opening speed
 	}
 
 
