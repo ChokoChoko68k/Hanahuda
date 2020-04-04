@@ -6,7 +6,7 @@
 #include"ResultScene.h"
 
 //静的メンバ変数の実体宣言
-SceneManager* SceneManager::pointer_instance;
+SceneManager* SceneManager::pointer_instance;//無いとリンカエラーが出る
 
 int SceneManager::Update() {
 
@@ -14,12 +14,6 @@ int SceneManager::Update() {
 	int result_downer = -1;
 
 	//Scene Update
-	/*try {
-
-	}
-	catch(){
-
-	}*/
 	if (upperscene != nullptr)result_upper = upperscene->Update();
 	else if (downerscene != nullptr)result_downer = downerscene->Update();
 

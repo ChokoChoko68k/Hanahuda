@@ -32,12 +32,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,//インスタンスハンドル
 
 	//create original font : if error, use default font
 	fonthandle = CreateFontToHandle("hanazono-20141012/HanaMinA.ttf", 16, -1);
-	if (fonthandle <= 0) {
-		fonthandle = CreateFontToHandle(NULL, 16, -1);
-	}
+	if (fonthandle <= 0) fonthandle = CreateFontToHandle(NULL, 16, -1);
 
-	SceneManager::CreateInstance();
-
+	//SceneManager::CreateInstance();
+	SceneManager::GetInstance();//実体の作成とCreateSceneを同じ文でやるとなぜかアクセス違反が起きる
 	SceneManager::GetInstance()->CreateScene(SceneID::TITLE, SceneLayer::DOWNER);
 
 	while (ProcessMessage() == 0 && keystate_9 != 1) {
@@ -74,4 +72,13 @@ void DebugLight() {
 new 型名
 new 型名[要素数]
 new コンストラクタ
+
+C++11 スマートポインタ
+
+ポインタ渡しと参照渡しの違い
+参照渡しはC++になって追加された。ポインタ渡しのより厳しい版と思っていいらしい
+１．->演算子を使わずに書けるので可読性が上がる
+２．文法上ヌル値を入れらないので、nullptrを放り込む可能性が下がる
+　　…それでも変数の未初期化にはカバーできないが
+
 */

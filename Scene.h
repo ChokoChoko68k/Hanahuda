@@ -9,7 +9,7 @@ class Scene {
 private:
 	//コピー禁止
 	Scene(const Scene& other);//コピコン;仮引数にとったりしてもprivateなので呼べない
-	Scene& operator=(const Scene& other);//代入演算子オーバーロード;代入してもprivateなので呼べない//なぜintellisenseが警告を？？
+	Scene& operator=(const Scene& other);//代入演算子オーバーロード;代入してもprivateなので呼べない
 
 public:
 	Scene() {};
@@ -33,6 +33,8 @@ private:
 		teban = 0;
 		score_player0 = 20;
 		score_player1 = 20;
+
+		pointer_instance = nullptr;
 	}
 	//inhibit copying
 	SceneManager(const SceneManager& other);
@@ -48,13 +50,19 @@ private:
 	int score_player1;
 
 public:
-	static void CreateInstance() {//特定のオブジェクトを基準とする相対的な参照・・・じゃなくなる
+	/*static void CreateInstance() {//特定のオブジェクトを基準とする相対的な参照・・・じゃなくなる
 		if (pointer_instance == nullptr) {
 			pointer_instance = new SceneManager();
 		}
-	}
+	}*/
 
-	static SceneManager* GetInstance() { return pointer_instance; }
+	//breakpoint didt execute.....;comlier optimizes to skip this (or inlined) automatically? ->  volatile???
+	static SceneManager* GetInstance() { 
+		if (pointer_instance == nullptr) {
+			pointer_instance = new SceneManager();
+		}
+		return pointer_instance;
+	}
 
 	static void DeleteInstance() {
 		if (pointer_instance != nullptr) {
